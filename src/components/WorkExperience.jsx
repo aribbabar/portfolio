@@ -42,7 +42,7 @@ const WorkExperience = () => {
         <div className="line-break"></div>
         <h2>Key Holder (Assistant Manager)</h2>
         <h3>Shoe Show Mega</h3>
-        <h5>Jan 2019 - Present (3 Years & 7 Months)</h5>
+        <h5>Jan 2019 - Jul 2022 (3 Years & 7 Months)</h5>
         <ul>
           <li>Demonstrated exceeding customer service skills</li>
           <li>

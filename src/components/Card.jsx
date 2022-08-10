@@ -3,7 +3,7 @@ import "../css/Card.css";
 const Card = ({ img, link, title, desc, classes, technologies }) => {
   let classNames = "";
 
-  if (classes != undefined) {
+  if (classes !== undefined) {
     classNames = classes;
   }
 
@@ -20,7 +20,7 @@ const Card = ({ img, link, title, desc, classes, technologies }) => {
       <div className="card-content-container">
         <div className="technologies-container">
           {technologies.map((tech) => (
-            <p>{tech}</p>
+            <p key={Math.random()}>{tech}</p>
           ))}
         </div>
         <h2>{title}</h2>
