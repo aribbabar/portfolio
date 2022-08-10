@@ -24,6 +24,7 @@ const WorkExperience = () => {
   //   return time;
   // };
 
+  const chalkysTime = moment([2022, 8, 1]).fromNow(true);
   const detsTime = moment([2021, 8, 1]).fromNow(true);
 
   return (
@@ -32,6 +33,23 @@ const WorkExperience = () => {
         <h2>Work Experience</h2>
       </div>
       <div className="experience-container">
+        <h2>Founder | CEO</h2>
+        <h3>Chalky's Web House</h3>
+        <h5>Aug 2022 - Present ({chalkysTime})</h5>
+        <ul>
+          <li>We provide web services to other software developers</li>
+        </ul>
+        <div className="line-break"></div>
+        <h2>Founder | CEO</h2>
+        <h3>Chalky's Fashion House</h3>
+        <h5>Aug 2022 - Present ({chalkysTime})</h5>
+        <ul>
+          <li>
+            We offer affordable and custom one-color t-shirt designs to local
+            and online audiences
+          </li>
+        </ul>
+        <div className="line-break"></div>
         <h2>Technical Director</h2>
         <h3>Distance Education Tech & Services (DETS)</h3>
         <h5>Aug 2021 - Present ({detsTime})</h5>
