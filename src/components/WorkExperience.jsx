@@ -33,17 +33,13 @@ const WorkExperience = () => {
         <h2>Work Experience</h2>
       </div>
       <div className="experience-container">
-        <h2>Founder | CEO</h2>
-        <h3>Chalky's Web House</h3>
+        <h2>Developer</h2>
+        <h3>Chalky's</h3>
         <h5>Aug 2022 - Present ({chalkysTime})</h5>
         <ul>
-          <li>We provide web services to other software developers</li>
-        </ul>
-        <div className="line-break"></div>
-        <h2>Founder | CEO</h2>
-        <h3>Chalky's Fashion House</h3>
-        <h5>Aug 2022 - Present ({chalkysTime})</h5>
-        <ul>
+          <li>
+            We provide a variety of web services to other software developers
+          </li>
           <li>
             We offer affordable and custom one-color t-shirt designs to local
             and online audiences
