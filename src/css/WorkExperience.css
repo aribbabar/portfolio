@@ -11,9 +11,6 @@
 
 #work-experience .experience-container {
   margin: 0 1.5rem 1.5rem 1.5rem;
-  word-wrap: break-word;
-  text-align: left;
-  list-style: inside;
   padding-bottom: 1rem;
 }
 

@@ -1,4 +1,5 @@
 import "../css/Footer.css";
+import resume from "../images/resume.pdf";
 
 const Footer = () => {
   return (
@@ -10,6 +11,7 @@ const Footer = () => {
           rel="noreferrer"
         >
           <i className="fab fa-linkedin fa-2x"></i>
+          <span className="tooltip">LinkedIn</span>
         </a>
         <a
           href="https://twitter.com/AribFarooqui"
@@ -17,9 +19,15 @@ const Footer = () => {
           rel="noreferrer"
         >
           <i className="fab fa-twitter-square fa-2x"></i>
+          <span className="tooltip">Twitter</span>
         </a>
         <a href="https://github.com/aribbabar" target="_blank" rel="noreferrer">
           <i className="fab fa-github-square fa-2x"></i>
+          <span className="tooltip">GitHub</span>
+        </a>
+        <a href={resume} target="_blank" rel="noreferrer">
+          <i className="fa-solid fa-square-envelope fa-2x"></i>
+          <span className="tooltip">Resume</span>
         </a>
       </div>
       <p>© All rights reserved | Arib Farooqui</p>

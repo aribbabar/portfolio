@@ -7,9 +7,6 @@
 
 #footer .icons {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
 }
 
 #footer .icons a {
@@ -29,6 +26,10 @@
   transition: 0.2s;
 }
 
+.tooltip {
+  display: none;
+}
+
 @media (min-width: 768px) {
   #footer .icons a:hover {
     transform: scale(1.2);
@@ -36,5 +37,26 @@
 
   #footer .up:hover {
     transform: translateY(-5px);
+  }
+
+  .tooltip {
+    visibility: hidden;
+    width: 120px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+
+  .icons a:hover .tooltip {
+    visibility: visible;
   }
 }

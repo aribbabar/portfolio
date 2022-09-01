@@ -17,11 +17,11 @@
 
 #skills-section .skill-container {
   background-color: var(--tertiary-color);
+  min-width: 350px;
   color: #fff;
   padding: 2rem;
   text-align: center;
   border-radius: 10px;
-  min-width: 400px;
 }
 
 #skills-section .skills-container .skill-container .skills {
@@ -66,6 +66,6 @@
   }
 
   #skills-section .skill-container {
-    min-width: 80%;
+    min-width: 50vw;
   }
 }
