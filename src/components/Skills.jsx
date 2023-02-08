@@ -33,19 +33,13 @@ const Skills = () => {
           <div className="line"></div>
           <div className="skills">
             <div className="skill-background">
+              <p>Node</p>
+            </div>
+            <div className="skill-background">
               <p>Java</p>
             </div>
-            <div className="skill-background">
-              <p>C#</p>
-            </div>
-            <div className="skill-background">
-              <p>C</p>
-            </div>
-            <div className="skill-background">
-              <p>Ruby</p>
-            </div>
             <div className="skill-background grid-span-2">
-              <p>OCaml</p>
+              <p>C#</p>
             </div>
           </div>
         </div>

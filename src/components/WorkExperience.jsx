@@ -29,7 +29,7 @@ const WorkExperience = () => {
     return time;
   };
 
-  const detsTime = timeSince(new Date("August 01, 2021"));
+  const jcpTime = timeSince(new Date("August 01, 2022"));
 
   return (
     <div id="work-experience">
@@ -37,9 +37,20 @@ const WorkExperience = () => {
         <h2>Work Experience</h2>
       </div>
       <div className="experience-container">
+        <h2>Associate</h2>
+        <h3>JCPenney</h3>
+        <h5>Aug 2022 - Present ({jcpTime})</h5>
+        <ul>
+          <li>
+            Worked on daily tasks as assigned by the supervisor, including but
+            not limited to merchandising, floor recovery, and tallying up
+            transactions for our esteemed clientele
+          </li>
+        </ul>
+        <div className="line-break"></div>
         <h2>Technical Director</h2>
         <h3>Distance Education Tech & Services (DETS)</h3>
-        <h5>Aug 2021 - Present ({detsTime})</h5>
+        <h5>Aug 2021 - Dec 2022 (1 Year & 5 Months)</h5>
         <ul>
           <li>Recorded classroom with basic staging techniques</li>
           <li>Provided support to staff & instructors</li>

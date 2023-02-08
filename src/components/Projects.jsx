@@ -3,6 +3,7 @@ import Card from "./Card";
 import dbz from "../images/dbz.jpg";
 import umd from "../images/umd.png";
 import ticTacToe from "../images/tic-tac-toe.jpg";
+import favoritaFeaturedImg from "../images/favorita-featured.svg";
 
 const Projects = () => {
   return (
@@ -29,13 +30,13 @@ const Projects = () => {
           technologies={["HTML", "CSS", "JS"]}
         />
         <Card
-          img={ticTacToe}
-          link={"https://tic-tac-toe-77.herokuapp.com/"}
-          title={"Online Multiplayer Tic Tac Toe"}
+          img={favoritaFeaturedImg}
+          link={"https://favorita.chalkys.net/"}
+          title={"Favorita"}
           desc={
-            "An online multiplayer tic tac toe game made with react and socket.io"
+            "A web application for keeping track of your favorite movies, tv-shows, games, and more! Create an account to mess around with the app today!"
           }
-          technologies={["HTML", "CSS", "JS", "React", "Socket.io", "Express"]}
+          technologies={["HTML", "CSS", "JS", "React", "Firebase"]}
         />
       </div>
     </div>
