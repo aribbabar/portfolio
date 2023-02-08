@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.12b1dce0.css",
+    "main.js": "/static/js/main.f38770c6.js",
+    "static/media/dbz.jpg": "/static/media/dbz.38063a8016b8c8439001.jpg",
+    "static/media/umd.png": "/static/media/umd.8f5ce74e6661b38e7900.png",
+    "static/media/resume.pdf": "/static/media/resume.5a9a2bdde0de867736e3.pdf",
+    "static/media/tic-tac-toe.jpg": "/static/media/tic-tac-toe.7ec65d7652e0dc6fde46.jpg",
+    "static/media/avatar.svg": "/static/media/avatar.de4e8013067dc3d2d7609a5edfdeda41.svg",
+    "index.html": "/index.html",
+    "static/media/favorita-featured.svg": "/static/media/favorita-featured.4027ae47fdd1d5a10f825328eac0514d.svg",
+    "static/media/x.svg": "/static/media/x.19a1f1f6a11f3cf243a3b366c65d8a8b.svg",
+    "static/media/nav-btn.svg": "/static/media/nav-btn.005188e551f8ada64830b73a2276ac01.svg",
+    "main.12b1dce0.css.map": "/static/css/main.12b1dce0.css.map",
+    "main.f38770c6.js.map": "/static/js/main.f38770c6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.12b1dce0.css",
+    "static/js/main.f38770c6.js"
+  ]
+}
