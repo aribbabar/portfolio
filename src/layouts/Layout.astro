@@ -2,22 +2,108 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta
+			name="description"
+			content="Cyber terminal portfolio for Arib Farooqui, software engineer."
+		/>
+		<title>Arib Farooqui | Software Engineer</title>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
+	:root {
+		color-scheme: dark;
+		--bg: #030811;
+		--panel: rgba(7, 14, 27, 0.86);
+		--panel-strong: rgba(8, 16, 29, 0.96);
+		--line: rgba(148, 183, 220, 0.28);
+		--line-bright: rgba(116, 255, 199, 0.72);
+		--text: #eff7ff;
+		--muted: #9aaabd;
+		--faint: #607184;
+		--green: #5effb5;
+		--green-soft: rgba(94, 255, 181, 0.16);
+		--cyan: #5fe6ff;
+		--purple: #b68cff;
+		--yellow: #ffe35e;
+		--orange: #ff9d52;
+		--red: #ff655c;
+		--radius: 8px;
+		--mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	}
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+		background:
+			radial-gradient(circle at 20% 8%, rgba(44, 120, 255, 0.15), transparent 30rem),
+			radial-gradient(circle at 78% 18%, rgba(88, 255, 187, 0.1), transparent 24rem),
+			linear-gradient(180deg, #02060e 0%, #07101d 52%, #040812 100%);
+		color: var(--text);
+		font-family: var(--mono);
+		font-size: 16px;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	button,
+	a {
+		font: inherit;
+	}
+
+	a {
+		color: inherit;
+	}
+
+	::selection {
+		background: rgba(94, 255, 181, 0.32);
+	}
+
+	body::before {
+		position: fixed;
+		inset: 0;
+		z-index: -2;
+		content: "";
+		background-image:
+			linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+		background-size: 58px 58px;
+		mask-image: linear-gradient(to bottom, transparent, black 15%, black 78%, transparent);
+	}
+
+	body::after {
+		position: fixed;
+		inset: 0;
+		z-index: 5;
+		pointer-events: none;
+		content: "";
+		background:
+			linear-gradient(rgba(255, 255, 255, 0.025) 50%, transparent 50%) 0 0 / 100% 4px,
+			radial-gradient(circle at center, transparent 0, rgba(0, 0, 0, 0.24) 100%);
+		mix-blend-mode: screen;
+		opacity: 0.32;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 </style>

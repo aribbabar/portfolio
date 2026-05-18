@@ -1,0 +1,225 @@
+---
+import Panel from './Panel.astro';
+
+const groups = [
+	{
+		title: 'Languages',
+		icon: '</>',
+		items: ['TypeScript', 'JavaScript', 'Python', 'SQL'],
+		tone: 'yellow',
+	},
+	{
+		title: 'Frontend',
+		icon: '[]',
+		items: ['React', 'Next.js', 'Astro', 'Tailwind CSS'],
+	},
+	{
+		title: 'Backend',
+		icon: '==',
+		items: ['Node.js', 'Express', 'Fastify', 'PostgreSQL'],
+	},
+	{
+		title: 'Tools',
+		icon: '>_',
+		items: ['Git', 'Docker', 'VS Code', 'Postman'],
+	},
+	{
+		title: 'Cloud / DevOps',
+		icon: '/\\',
+		items: ['AWS', 'Vercel', 'Nginx', 'GitHub Actions'],
+	},
+	{
+		title: 'Extras',
+		icon: '*',
+		items: ['Socket.io', 'Prisma', 'OpenAI API', 'and more...'],
+	},
+];
+---
+
+<Panel title="Tech Arsenal" eyebrow="System.Skills" class="skills-panel" id="skills">
+	<p slot="intro" class="intro">The tools I use to build, break, and ship things.</p>
+	<div class="orbit" aria-hidden="true">
+		<span>ship</span>
+	</div>
+	<div class="skills-grid">
+		{
+			groups.map((group) => (
+				<article class="skill-box">
+					<div class="skill-icon">{group.icon}</div>
+					<div>
+						<h3 class={group.tone}>{group.title}</h3>
+						<ul>
+							{group.items.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</div>
+				</article>
+			))
+		}
+	</div>
+	<p class="learning"><span>[*]</span> Always learning. Currently: better decisions.</p>
+</Panel>
+
+<style>
+	.skills-panel {
+		grid-column: 2 / 3;
+		grid-row: 1 / 2;
+	}
+
+	.orbit,
+	.skills-grid,
+	.learning {
+		position: relative;
+		z-index: 1;
+	}
+
+	.orbit {
+		position: absolute;
+		top: 34px;
+		right: 45px;
+		width: 160px;
+		height: 86px;
+		pointer-events: none;
+	}
+
+	.orbit::before {
+		position: absolute;
+		inset: 7px 4px auto auto;
+		width: 140px;
+		height: 70px;
+		content: "";
+		border-top: 1px dashed rgba(255, 227, 94, 0.7);
+		border-radius: 50%;
+		transform: rotate(-26deg);
+	}
+
+	.orbit::after {
+		position: absolute;
+		right: 0;
+		top: 0;
+		content: "+";
+		color: var(--green);
+	}
+
+	.orbit span {
+		position: absolute;
+		left: 24px;
+		top: 46px;
+		color: #d9e9ff;
+		font-size: 0.62rem;
+		text-shadow: 0 0 14px rgba(95, 230, 255, 0.7);
+	}
+
+	.skills-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.skill-box {
+		display: grid;
+		grid-template-columns: 48px 1fr;
+		gap: 16px;
+		min-height: 112px;
+		padding: 15px 16px;
+		border: 1px solid rgba(148, 183, 220, 0.25);
+		border-radius: 5px;
+		background: rgba(5, 12, 22, 0.78);
+		clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+		transition:
+			border-color 160ms ease,
+			transform 160ms ease;
+	}
+
+	.skill-box:hover {
+		border-color: rgba(95, 230, 255, 0.52);
+		transform: translateY(-2px);
+	}
+
+	.skill-icon {
+		display: grid;
+		place-items: center;
+		width: 42px;
+		aspect-ratio: 1;
+		border: 1px solid rgba(94, 255, 181, 0.4);
+		border-radius: 5px;
+		color: var(--green);
+		background: rgba(94, 255, 181, 0.07);
+		font-size: 0.94rem;
+		font-weight: 800;
+	}
+
+	h3 {
+		margin: 0 0 10px;
+		color: var(--text);
+		font-size: clamp(0.68rem, 0.74vw, 0.82rem);
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	h3::after {
+		display: block;
+		width: 28px;
+		height: 1px;
+		margin-top: 9px;
+		content: "";
+		background: currentColor;
+		box-shadow: 7px 0 0 currentColor, 14px 0 0 currentColor;
+	}
+
+	h3.yellow {
+		color: var(--yellow);
+	}
+
+	ul {
+		display: grid;
+		gap: 7px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	li {
+		color: #d4dfec;
+		font-size: clamp(0.64rem, 0.69vw, 0.78rem);
+	}
+
+	.learning {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin: 22px 0 0;
+		color: var(--faint);
+		font-size: clamp(0.64rem, 0.7vw, 0.78rem);
+		text-transform: uppercase;
+	}
+
+	.learning span {
+		color: var(--green);
+		font-size: 1.3rem;
+	}
+
+	@media (max-width: 1420px) {
+		.skills-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 1180px) {
+		.skills-panel {
+			grid-column: auto;
+			grid-row: auto;
+		}
+	}
+
+	@media (max-width: 580px) {
+		.skills-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.orbit {
+			display: none;
+		}
+	}
+</style>

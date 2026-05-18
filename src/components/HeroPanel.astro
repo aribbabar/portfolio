@@ -1,0 +1,376 @@
+---
+import TerminalWindow from './TerminalWindow.astro';
+
+const helpLines = [
+	'<span class="dim">available commands:</span>',
+	'<span class="cmd">projects</span> - list deployed projects',
+	'<span class="cmd">skills</span> - view my tech arsenal',
+	'<span class="cmd">experience</span> - quest log (work history)',
+	'<span class="cmd">contact</span> - get in touch',
+	'<span class="cmd">fun-facts</span> - useless but interesting',
+	'<span class="cmd">bugs</span> - known issues (there are some)',
+	'<span class="cmd">easter-egg</span> - ???',
+	'<span class="cmd">sudo hire-me</span> - instantly get hired*',
+	'<span class="cmd">clear</span> - clear the screen',
+	'<span class="cmd">exit</span> - leave (why tho?)',
+];
+---
+
+<section id="home" class="hero-panel" aria-labelledby="hero-title">
+	<div class="stars" aria-hidden="true">
+		<span class="asteroid one"></span>
+		<span class="asteroid two"></span>
+		<span class="asteroid three"></span>
+		<span class="asteroid four"></span>
+	</div>
+	<div class="terrain" aria-hidden="true"></div>
+
+	<div class="hero-copy">
+		<p class="mode">// developer mode: on</p>
+		<h1 id="hero-title">Arib Farooqui<span>_</span></h1>
+		<p class="role">Software Engineer</p>
+		<p class="summary">
+			I build interactive experiences, developer tools, and things that make computers do cool
+			stuff. Sometimes it works. Sometimes it ships.
+		</p>
+		<div class="actions">
+			<a class="primary" href="#projects">&gt; View Projects</a>
+			<a class="secondary" href="/resume.pdf">&gt; Download Resume</a>
+		</div>
+	</div>
+
+	<div class="terminal-wrap">
+		<TerminalWindow title="Terminal" lines={helpLines} />
+	</div>
+
+	<div class="tooltip" role="status">
+		<span aria-hidden="true">[::]</span>
+		<p><strong>Tooltip:</strong> Loads too fast to read this message. Suffering from success.</p>
+		<button aria-label="Dismiss tooltip">×</button>
+	</div>
+</section>
+
+<style>
+	.hero-panel {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(360px, 0.86fr) minmax(390px, 1fr);
+		align-items: center;
+		gap: clamp(24px, 3.4vw, 58px);
+		min-height: 0;
+		padding: clamp(30px, 4vw, 62px) clamp(28px, 4vw, 68px) 70px;
+		overflow: hidden;
+	}
+
+	.hero-panel::before {
+		position: absolute;
+		inset: 0;
+		content: "";
+		background:
+			radial-gradient(circle at 10% 24%, #d8f4ff 0 1px, transparent 1.5px),
+			radial-gradient(circle at 31% 8%, #ffffff 0 1px, transparent 1.5px),
+			radial-gradient(circle at 52% 36%, #ffffff 0 1.5px, transparent 2px),
+			radial-gradient(circle at 72% 16%, #ffffff 0 1px, transparent 1.5px),
+			radial-gradient(circle at 94% 19%, #ffffff 0 1.5px, transparent 2px),
+			radial-gradient(circle at 2% 63%, rgba(95, 230, 255, 0.55) 0 1px, transparent 1.5px),
+			linear-gradient(180deg, rgba(1, 7, 16, 0.08), rgba(1, 6, 14, 0.85));
+	}
+
+	.hero-copy,
+	.terminal-wrap,
+	.tooltip {
+		position: relative;
+		z-index: 2;
+	}
+
+	.stars {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.hero-copy {
+		max-width: 500px;
+		animation: rise 700ms ease both;
+	}
+
+	.mode {
+		margin: 0 0 20px;
+		color: var(--green);
+		font-size: clamp(0.66rem, 0.72vw, 0.82rem);
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 0;
+		color: #fff;
+		font-size: clamp(2.35rem, 3.15vw, 4.1rem);
+		line-height: 0.94;
+		text-transform: uppercase;
+		text-shadow:
+			0 0 28px rgba(255, 255, 255, 0.18),
+			3px 0 0 rgba(94, 255, 181, 0.08),
+			-3px 0 0 rgba(182, 140, 255, 0.08);
+	}
+
+	h1 span {
+		color: #e5f9ff;
+		animation: blink 980ms steps(2, end) infinite;
+	}
+
+	.role {
+		margin: 18px 0 22px;
+		color: var(--purple);
+		font-size: clamp(1rem, 1.2vw, 1.35rem);
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	.summary {
+		max-width: 500px;
+		margin: 0;
+		color: #c4d0df;
+		font-size: clamp(0.86rem, 0.9vw, 1rem);
+		line-height: 1.75;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+		margin-top: 32px;
+	}
+
+	.actions a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 42px;
+		padding: 0 22px;
+		border-radius: 4px;
+		font-size: clamp(0.7rem, 0.78vw, 0.86rem);
+		font-weight: 800;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition:
+			transform 160ms ease,
+			border-color 160ms ease,
+			background 160ms ease;
+	}
+
+	.primary {
+		border: 1px solid var(--line-bright);
+		background: rgba(94, 255, 181, 0.1);
+		color: var(--green);
+	}
+
+	.secondary {
+		border: 1px solid rgba(255, 255, 255, 0.28);
+		color: var(--text);
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.actions a:hover {
+		transform: translateY(-2px);
+	}
+
+	.terminal-wrap {
+		max-width: 560px;
+		animation: terminalIn 860ms 120ms ease both;
+	}
+
+	.terminal-wrap :global(.terminal-body) {
+		padding: 16px 20px;
+		font-size: clamp(0.62rem, 0.68vw, 0.78rem);
+		line-height: 1.5;
+	}
+
+	.terrain {
+		position: absolute;
+		right: -10%;
+		bottom: -5%;
+		left: -6%;
+		z-index: 1;
+		height: 42%;
+		background:
+			linear-gradient(165deg, transparent 0 44%, rgba(94, 255, 181, 0.45) 45%, transparent 46%) 0
+				0 / 80px 32px,
+			linear-gradient(15deg, transparent 0 47%, rgba(84, 167, 255, 0.56) 48%, transparent 49%) 0 0 /
+				96px 36px,
+			radial-gradient(ellipse at 50% 100%, rgba(25, 113, 255, 0.62), transparent 63%);
+		mask-image: linear-gradient(to top, black 0 78%, transparent);
+		opacity: 0.8;
+		transform: perspective(620px) rotateX(58deg);
+		transform-origin: bottom;
+		animation: drift 12s linear infinite;
+	}
+
+	.asteroid {
+		position: absolute;
+		z-index: 1;
+		display: block;
+		border-radius: 45% 55% 50% 50%;
+		background:
+			radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.75), transparent 12%),
+			radial-gradient(circle at 70% 65%, rgba(0, 0, 0, 0.42), transparent 18%),
+			linear-gradient(135deg, #718091, #263140 56%, #131b25);
+		box-shadow:
+			inset -14px -18px 24px rgba(0, 0, 0, 0.42),
+			0 0 22px rgba(206, 230, 255, 0.08);
+		opacity: 0.78;
+		animation: float 8s ease-in-out infinite;
+	}
+
+	.one {
+		top: 7%;
+		left: 41%;
+		width: 78px;
+		aspect-ratio: 1;
+	}
+
+	.two {
+		top: 22%;
+		left: 17%;
+		width: 38px;
+		aspect-ratio: 1;
+		animation-delay: -2s;
+	}
+
+	.three {
+		top: 8%;
+		left: 9%;
+		width: 26px;
+		aspect-ratio: 1;
+		animation-delay: -3s;
+	}
+
+	.four {
+		right: -1%;
+		top: 34%;
+		width: 54px;
+		aspect-ratio: 1;
+		animation-delay: -4s;
+	}
+
+	.tooltip {
+		position: absolute;
+		right: clamp(28px, 4vw, 70px);
+		bottom: 16px;
+		display: grid;
+		grid-template-columns: 32px 1fr 24px;
+		align-items: center;
+		gap: 12px;
+		width: min(560px, calc(100% - 56px));
+		padding: 11px 14px;
+		border: 1px solid rgba(148, 183, 220, 0.32);
+		border-radius: 5px;
+		background: rgba(7, 14, 27, 0.92);
+		color: #cbd6e4;
+		font-size: clamp(0.58rem, 0.66vw, 0.75rem);
+		box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+		animation: rise 760ms 350ms ease both;
+	}
+
+	.tooltip span {
+		color: var(--green);
+		font-size: 1rem;
+		text-align: center;
+	}
+
+	.tooltip p {
+		margin: 0;
+	}
+
+	.tooltip strong {
+		color: var(--text);
+		text-transform: uppercase;
+	}
+
+	.tooltip button {
+		width: 24px;
+		aspect-ratio: 1;
+		border: 0;
+		color: var(--text);
+		background: transparent;
+		cursor: pointer;
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes terminalIn {
+		from {
+			opacity: 0;
+			transform: translateX(20px) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0) scale(1);
+		}
+	}
+
+	@keyframes float {
+		50% {
+			transform: translate3d(8px, -12px, 0) rotate(8deg);
+		}
+	}
+
+	@keyframes drift {
+		to {
+			background-position:
+				160px 0,
+				-192px 0,
+				0 0;
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 1180px) {
+		.hero-panel {
+			min-height: 560px;
+		}
+	}
+
+	@media (max-width: 850px) {
+		.hero-panel {
+			grid-template-columns: 1fr;
+			align-content: center;
+			padding-bottom: 82px;
+		}
+
+		.terminal-wrap {
+			max-width: 620px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.hero-panel {
+			padding: 32px 18px 92px;
+		}
+
+		.actions a {
+			width: 100%;
+		}
+
+		.tooltip {
+			right: 14px;
+			left: 14px;
+			width: auto;
+			grid-template-columns: 28px 1fr 24px;
+		}
+	}
+</style>

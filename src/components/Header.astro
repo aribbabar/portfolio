@@ -1,0 +1,108 @@
+---
+const links = ['Home', 'Projects', 'Skills', 'Experience', 'Contact'];
+---
+
+<header class="shell-header">
+	<a class="brand" href="#home" aria-label="Arib Farooqui home">&gt; AF.PORTFOLIO</a>
+	<nav aria-label="Primary navigation">
+		{
+			links.map((link, index) => (
+				<a href={`#${link.toLowerCase()}`} class={index === 0 ? 'active' : undefined}>
+					[{String(index + 1).padStart(2, '0')}] {link}
+				</a>
+			))
+		}
+	</nav>
+	<a class="prompt-button" href="#contact" aria-label="Open contact terminal">&gt;_</a>
+</header>
+
+<style>
+	.shell-header {
+		display: grid;
+		grid-template-columns: 250px 1fr 42px;
+		align-items: center;
+		gap: 20px;
+		min-width: 0;
+		padding: 0 30px;
+		border-bottom: 1px solid rgba(148, 183, 220, 0.18);
+		background: linear-gradient(180deg, rgba(5, 12, 23, 0.92), rgba(3, 9, 18, 0.72));
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.brand {
+		color: var(--green);
+		font-weight: 800;
+		font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+		text-transform: uppercase;
+	}
+
+	nav {
+		display: flex;
+		justify-content: center;
+		gap: clamp(18px, 3.6vw, 60px);
+		min-width: 0;
+	}
+
+	nav a {
+		color: var(--text);
+		font-size: clamp(0.62rem, 0.68vw, 0.76rem);
+		text-transform: uppercase;
+		transition:
+			color 160ms ease,
+			text-shadow 160ms ease;
+	}
+
+	nav a:hover,
+	nav a.active {
+		color: var(--green);
+		text-shadow: 0 0 18px rgba(94, 255, 181, 0.45);
+	}
+
+	.prompt-button {
+		display: grid;
+		place-items: center;
+		width: 40px;
+		aspect-ratio: 1;
+		border: 1px solid rgba(94, 255, 181, 0.52);
+		border-radius: 5px;
+		color: var(--green);
+		background: rgba(94, 255, 181, 0.08);
+		box-shadow: inset 0 0 18px rgba(94, 255, 181, 0.06);
+		transition:
+			background 160ms ease,
+			transform 160ms ease;
+	}
+
+	.prompt-button:hover {
+		background: rgba(94, 255, 181, 0.16);
+		transform: translateY(-1px);
+	}
+
+	@media (max-width: 900px) {
+		.shell-header {
+			grid-template-columns: 1fr 42px;
+			padding: 18px;
+		}
+
+		nav {
+			grid-column: 1 / -1;
+			grid-row: 2;
+			justify-content: flex-start;
+			overflow-x: auto;
+			padding-bottom: 2px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.shell-header {
+			gap: 14px;
+		}
+
+		nav {
+			gap: 18px;
+		}
+	}
+</style>

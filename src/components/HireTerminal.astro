@@ -1,0 +1,105 @@
+---
+import TerminalWindow from './TerminalWindow.astro';
+
+const hireLines = [
+	'Checking qualifications...',
+	'Overqualified.',
+	'Checking attitude...',
+	"Slightly sarcastic. I'll allow it.",
+	'Checking vibe...',
+	'<span class="ok-text">[ok]</span> Vibe check passed.',
+	'Interview request simulated.',
+	'<span class="dim">(This is not a real command. Yet.)</span>',
+];
+---
+
+<section id="contact" class="hire-panel" aria-label="Contact panel">
+	<TerminalWindow title="Easter_Egg.exe" command="sudo hire-me" lines={hireLines} wide />
+	<aside class="note">
+		<h2>&gt; Note.txt</h2>
+		<p>I don't bite.</p>
+		<p>Much.</p>
+		<a href="mailto:hello@arib.dev" aria-label="Email Arib">:)</a>
+	</aside>
+</section>
+
+<style>
+	.hire-panel {
+		position: relative;
+		grid-column: 2 / 3;
+		grid-row: 3 / 5;
+		min-width: 0;
+		padding: 14px;
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+		background:
+			linear-gradient(180deg, rgba(8, 16, 29, 0.93), rgba(4, 10, 19, 0.94)),
+			radial-gradient(circle at 90% 100%, rgba(182, 140, 255, 0.1), transparent 18rem);
+		overflow: hidden;
+	}
+
+	.hire-panel :global(.terminal) {
+		min-height: 100%;
+	}
+
+	.hire-panel :global(.terminal-body) {
+		min-height: 260px;
+		padding-right: 190px;
+	}
+
+	.note {
+		position: absolute;
+		right: clamp(28px, 3vw, 58px);
+		bottom: clamp(34px, 4vw, 62px);
+		z-index: 3;
+		width: 150px;
+		min-height: 150px;
+		padding: 18px;
+		border: 1px solid rgba(148, 183, 220, 0.35);
+		background: rgba(12, 20, 35, 0.82);
+	}
+
+	h2 {
+		margin: 0 0 26px;
+		color: #dbe8f5;
+		font-size: 0.72rem;
+		text-transform: uppercase;
+	}
+
+	p {
+		margin: 0 0 8px;
+		color: #f1f6fb;
+		font-size: 0.76rem;
+		line-height: 1.5;
+	}
+
+	a {
+		position: absolute;
+		right: 22px;
+		bottom: 18px;
+		color: var(--green);
+		font-size: 1.25rem;
+		text-decoration: none;
+		transform: rotate(90deg);
+	}
+
+	@media (max-width: 1180px) {
+		.hire-panel {
+			grid-column: auto;
+			grid-row: auto;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.hire-panel :global(.terminal-body) {
+			min-height: 360px;
+			padding-right: clamp(16px, 1.25vw, 24px);
+			padding-bottom: 190px;
+		}
+
+		.note {
+			right: 24px;
+			bottom: 24px;
+		}
+	}
+</style>

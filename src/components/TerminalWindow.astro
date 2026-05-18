@@ -1,0 +1,156 @@
+---
+interface Props {
+	title: string;
+	command?: string;
+	lines?: string[];
+	wide?: boolean;
+}
+
+const { title, command = 'help', lines = [], wide = false } = Astro.props;
+---
+
+<article class:list={['terminal', { wide }]}>
+	<header>
+		<span>&gt; {title}</span>
+		<div class="lights" aria-hidden="true">
+			<i class="hot"></i>
+			<i class="warm"></i>
+			<i class="ok"></i>
+		</div>
+	</header>
+	<div class="terminal-body">
+		<p class="command">arib@portfolio:~$ <span>{command}</span></p>
+		{
+			lines.length > 0 && (
+				<div class="lines">
+					{lines.map((line) => (
+						<p set:html={line} />
+					))}
+				</div>
+			)
+		}
+		<p class="command prompt">arib@portfolio:~$ <span class="cursor"></span></p>
+	</div>
+</article>
+
+<style>
+	.terminal {
+		position: relative;
+		z-index: 2;
+		border: 1px solid rgba(148, 183, 220, 0.34);
+		border-radius: 8px;
+		background:
+			linear-gradient(180deg, rgba(11, 21, 35, 0.97), rgba(3, 9, 18, 0.98)),
+			radial-gradient(circle at 50% 0, rgba(95, 230, 255, 0.12), transparent 20rem);
+		box-shadow:
+			0 30px 75px rgba(0, 0, 0, 0.38),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+		overflow: hidden;
+	}
+
+	header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 38px;
+		padding: 0 14px;
+		border-bottom: 1px solid rgba(148, 183, 220, 0.18);
+		background: rgba(255, 255, 255, 0.04);
+		color: #9cf7c5;
+		font-size: clamp(0.64rem, 0.72vw, 0.78rem);
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	.lights {
+		display: flex;
+		gap: 9px;
+	}
+
+	.lights i {
+		display: block;
+		width: 8px;
+		aspect-ratio: 1;
+		border-radius: 999px;
+	}
+
+	.hot {
+		background: #ff664e;
+	}
+
+	.warm {
+		background: #ffce4f;
+	}
+
+	.ok {
+		background: #5eff7f;
+	}
+
+	.terminal-body {
+		padding: clamp(16px, 1.25vw, 24px);
+		color: #d8e7f7;
+		font-size: clamp(0.7rem, 0.78vw, 0.9rem);
+		line-height: 1.72;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	.command {
+		color: var(--green);
+	}
+
+	.command span {
+		color: var(--text);
+	}
+
+	.lines {
+		margin: 16px 0 18px;
+	}
+
+	.lines :global(.cmd) {
+		display: inline-block;
+		min-width: 9.2rem;
+		color: var(--green);
+	}
+
+	.lines :global(.dim) {
+		color: var(--muted);
+	}
+
+	.lines :global(.ok-text) {
+		color: var(--green);
+	}
+
+	.lines :global(.warn) {
+		color: var(--yellow);
+	}
+
+	.cursor {
+		display: inline-block;
+		width: 8px;
+		height: 1.1em;
+		margin-left: 6px;
+		background: #c7d7e6;
+		vertical-align: -0.18em;
+		animation: blink 980ms steps(2, end) infinite;
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.terminal-body {
+			line-height: 1.62;
+		}
+
+		.lines :global(.cmd) {
+			display: block;
+			min-width: 0;
+		}
+	}
+</style>

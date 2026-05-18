@@ -1,0 +1,156 @@
+---
+import Panel from './Panel.astro';
+
+const roles = [
+	{
+		period: '2025 - Present',
+		title: 'Software Engineer',
+		body: 'Built internal platforms, mobile tools, and automation systems that keep things mostly running.',
+	},
+	{
+		period: '2023 - 2025',
+		title: 'Software Engineer',
+		body: 'Worked on operational software, workflow tools, and mobile applications used by real humans.',
+	},
+	{
+		period: '2022 - 2023',
+		title: 'Full Stack Developer',
+		body: 'Shipped web apps, admin dashboards, and APIs. Learned a lot. Broke things. Fixed things.',
+	},
+	{
+		period: '2021 - 2022',
+		title: 'Developer Intern',
+		body: 'Started the journey. Googled everything. Still do.',
+	},
+];
+---
+
+<Panel title="Experience" eyebrow="Quest.Log" class="experience-panel" id="experience">
+	<p slot="intro" class="intro">The journey so far.</p>
+	<ol class="timeline">
+		{
+			roles.map((role) => (
+				<li>
+					<time>{role.period}</time>
+					<span class="node" aria-hidden="true"></span>
+					<div>
+						<h3>{role.title}</h3>
+						<p>{role.body}</p>
+					</div>
+				</li>
+			))
+		}
+	</ol>
+	<div class="ruins" aria-hidden="true"></div>
+</Panel>
+
+<style>
+	.experience-panel {
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+	}
+
+	.timeline {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		gap: 28px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.timeline::before {
+		position: absolute;
+		top: 5px;
+		bottom: 7px;
+		left: min(38%, 180px);
+		content: "";
+		border-left: 1px dashed rgba(196, 224, 246, 0.42);
+	}
+
+	li {
+		display: grid;
+		grid-template-columns: minmax(110px, 0.65fr) 24px 1fr;
+		align-items: start;
+		gap: 20px;
+	}
+
+	time {
+		color: var(--muted);
+		font-size: clamp(0.64rem, 0.7vw, 0.78rem);
+		text-transform: uppercase;
+	}
+
+	.node {
+		position: relative;
+		z-index: 2;
+		display: grid;
+		place-items: center;
+		width: 14px;
+		aspect-ratio: 1;
+		margin-top: 2px;
+		border: 1px solid #d4e9f7;
+		background: rgba(6, 14, 25, 0.94);
+		transform: rotate(45deg);
+	}
+
+	.node::after {
+		width: 4px;
+		aspect-ratio: 1;
+		content: "";
+		background: var(--green);
+		border-radius: 50%;
+	}
+
+	h3 {
+		margin: 0 0 8px;
+		color: var(--green);
+		font-size: clamp(0.78rem, 0.84vw, 0.95rem);
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	p {
+		max-width: 410px;
+		margin: 0;
+		color: #c6d3e0;
+		font-size: clamp(0.66rem, 0.72vw, 0.82rem);
+		line-height: 1.55;
+	}
+
+	.ruins {
+		position: absolute;
+		right: -18px;
+		bottom: -18px;
+		z-index: 0;
+		width: 150px;
+		height: 145px;
+		opacity: 0.18;
+		background:
+			linear-gradient(90deg, transparent 0 16px, #91a4b9 16px 22px, transparent 22px 38px) 0 80px /
+				38px 60px,
+			linear-gradient(#91a4b9, #91a4b9) 88px 52px / 22px 92px no-repeat,
+			linear-gradient(#91a4b9, #91a4b9) 116px 18px / 18px 126px no-repeat,
+			linear-gradient(#91a4b9, #91a4b9) 134px 76px / 15px 68px no-repeat;
+		clip-path: polygon(0 100%, 100% 100%, 100% 0, 84% 11%, 79% 27%, 65% 16%, 56% 33%, 47% 26%, 40% 42%, 25% 32%, 15% 53%, 0 45%);
+	}
+
+	@media (max-width: 1180px) {
+		.experience-panel {
+			grid-column: auto;
+			grid-row: auto;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.timeline::before {
+			left: 96px;
+		}
+
+		li {
+			grid-template-columns: 78px 18px 1fr;
+			gap: 12px;
+		}
+	}
+</style>
