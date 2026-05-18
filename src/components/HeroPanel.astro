@@ -1,5 +1,6 @@
 ---
 import TerminalWindow from './TerminalWindow.astro';
+import WaveBackground from './WaveBackground.astro';
 import asteroidSrc from '../assets/aesteroid.svg?url';
 
 const helpLines = [
@@ -49,7 +50,7 @@ const helpLines = [
 		<span class="star-dot phi"></span>
 		<span class="star-dot chi"></span>
 	</div>
-	<div class="terrain" aria-hidden="true"></div>
+	<WaveBackground />
 
 	<div class="hero-copy">
 		<p class="mode">// developer mode: on</p>
@@ -91,6 +92,7 @@ const helpLines = [
 	.hero-panel::before {
 		position: absolute;
 		inset: 0;
+		z-index: 0;
 		content: "";
 		background:
 			radial-gradient(circle at 10% 24%, #d8f4ff 0 1px, transparent 1.5px),
@@ -99,14 +101,14 @@ const helpLines = [
 			radial-gradient(circle at 72% 16%, #ffffff 0 1px, transparent 1.5px),
 			radial-gradient(circle at 88% 18%, #ffffff 0 1.5px, transparent 2px),
 			radial-gradient(circle at 2% 63%, rgba(95, 230, 255, 0.55) 0 1px, transparent 1.5px),
-			linear-gradient(180deg, rgba(1, 7, 16, 0.08), rgba(1, 6, 14, 0.85));
+			linear-gradient(180deg, rgba(1, 7, 16, 0.04), rgba(1, 6, 14, 0.58));
 	}
 
 	.hero-copy,
 	.terminal-wrap,
 	.tooltip {
 		position: relative;
-		z-index: 2;
+		z-index: 3;
 	}
 
 	.stars {
@@ -211,26 +213,6 @@ const helpLines = [
 		padding: 16px 20px;
 		font-size: clamp(0.62rem, 0.68vw, 0.78rem);
 		line-height: 1.5;
-	}
-
-	.terrain {
-		position: absolute;
-		right: -10%;
-		bottom: -5%;
-		left: -6%;
-		z-index: 1;
-		height: 42%;
-		background:
-			linear-gradient(165deg, transparent 0 44%, rgba(94, 255, 181, 0.45) 45%, transparent 46%) 0
-				0 / 80px 32px,
-			linear-gradient(15deg, transparent 0 47%, rgba(84, 167, 255, 0.56) 48%, transparent 49%) 0 0 /
-				96px 36px,
-			radial-gradient(ellipse at 50% 100%, rgba(25, 113, 255, 0.62), transparent 63%);
-		mask-image: linear-gradient(to top, black 0 78%, transparent);
-		opacity: 0.8;
-		transform: perspective(620px) rotateX(58deg);
-		transform-origin: bottom;
-		animation: drift 12s linear infinite;
 	}
 
 	.asteroid {
@@ -563,15 +545,6 @@ const helpLines = [
 		}
 	}
 
-	@keyframes drift {
-		to {
-			background-position:
-				160px 0,
-				-192px 0,
-				0 0;
-		}
-	}
-
 	@keyframes asteroidDriftOne {
 		0%,
 		100% {
@@ -672,6 +645,7 @@ const helpLines = [
 		.hero-panel {
 			grid-template-columns: 1fr;
 			align-content: center;
+			min-height: auto;
 			padding-bottom: 82px;
 		}
 
@@ -722,7 +696,6 @@ const helpLines = [
 	@media (prefers-reduced-motion: reduce) {
 		.hero-copy,
 		.terminal-wrap,
-		.terrain,
 		.asteroid,
 		h1 span,
 		.tooltip {

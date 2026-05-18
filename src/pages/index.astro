@@ -50,17 +50,18 @@ import HireTerminal from '../components/HireTerminal.astro';
 	}
 
 	.hero-area {
+		position: relative;
 		display: grid;
 		grid-template-rows: 72px 1fr;
 		min-width: 0;
 		border: 1px solid var(--line);
 		border-radius: var(--radius);
 		background:
-			linear-gradient(180deg, rgba(8, 16, 30, 0.94), rgba(4, 9, 18, 0.9)),
+			linear-gradient(180deg, rgba(8, 16, 30, 0.9), rgba(4, 9, 18, 0.88)),
 			radial-gradient(circle at 64% 34%, rgba(83, 231, 255, 0.12), transparent 22rem);
 		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
 		overflow: hidden;
-		min-height: calc(100svh - 24px);
+		min-height: clamp(580px, 72svh, 760px);
 	}
 
 	.site-footer {
@@ -103,7 +104,7 @@ import HireTerminal from '../components/HireTerminal.astro';
 		}
 
 		.hero-area {
-			min-height: 640px;
+			min-height: 600px;
 		}
 
 		.site-footer {
@@ -124,7 +125,7 @@ import HireTerminal from '../components/HireTerminal.astro';
 
 		.hero-area {
 			grid-template-rows: auto 1fr;
-			min-height: 720px;
+			min-height: auto;
 		}
 
 		.site-footer {
