@@ -15,9 +15,10 @@ import HireTerminal from '../components/HireTerminal.astro';
 				<Header />
 				<HeroPanel />
 			</div>
-			<SkillsPanel />
 			<ProjectsPanel />
+			<SkillsPanel />
 			<ExperiencePanel />
+			<HireTerminal />
 			<footer class="site-footer" aria-label="Portfolio footer">
 				<div class="socials" aria-label="Social links">
 					<a href="https://github.com/aribfarooqui" aria-label="GitHub">GH</a>
@@ -27,7 +28,6 @@ import HireTerminal from '../components/HireTerminal.astro';
 				<span>© 2026 Arib Farooqui. All rights reserved.</span>
 				<span>Built with &lt;3 and too much caffeine</span>
 			</footer>
-			<HireTerminal />
 		</section>
 	</main>
 </Layout>
@@ -41,8 +41,8 @@ import HireTerminal from '../components/HireTerminal.astro';
 
 	.dashboard {
 		display: grid;
-		grid-template-columns: minmax(0, 1.68fr) minmax(360px, 0.96fr);
-		grid-template-rows: minmax(425px, 52vh) auto auto 42px;
+		grid-template-columns: minmax(0, 1fr);
+		grid-auto-rows: auto;
 		gap: 10px;
 		max-width: 1900px;
 		min-height: calc(100svh - 24px);
@@ -60,10 +60,10 @@ import HireTerminal from '../components/HireTerminal.astro';
 			radial-gradient(circle at 64% 34%, rgba(83, 231, 255, 0.12), transparent 22rem);
 		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
 		overflow: hidden;
+		min-height: calc(100svh - 24px);
 	}
 
 	.site-footer {
-		grid-column: 1 / 2;
 		display: grid;
 		grid-template-columns: 190px 1fr auto;
 		align-items: center;
@@ -99,7 +99,6 @@ import HireTerminal from '../components/HireTerminal.astro';
 
 	@media (max-width: 1180px) {
 		.dashboard {
-			grid-template-columns: 1fr;
 			grid-template-rows: auto;
 		}
 
@@ -108,7 +107,6 @@ import HireTerminal from '../components/HireTerminal.astro';
 		}
 
 		.site-footer {
-			grid-column: auto;
 			order: 20;
 		}
 	}
