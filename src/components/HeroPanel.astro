@@ -1,5 +1,6 @@
 ---
 import TerminalWindow from './TerminalWindow.astro';
+import asteroidSrc from '../assets/aesteroid.svg?url';
 
 const helpLines = [
 	'<span class="dim">available commands:</span>',
@@ -18,10 +19,35 @@ const helpLines = [
 
 <section id="home" class="hero-panel" aria-labelledby="hero-title">
 	<div class="stars" aria-hidden="true">
-		<span class="asteroid one"></span>
-		<span class="asteroid two"></span>
-		<span class="asteroid three"></span>
-		<span class="asteroid four"></span>
+		<img class="asteroid one" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid two" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid three" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid four" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid five" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid six" src={asteroidSrc} alt="" loading="eager" />
+		<img class="asteroid seven" src={asteroidSrc} alt="" loading="eager" />
+		<span class="star-dot alpha"></span>
+		<span class="star-dot beta"></span>
+		<span class="star-dot gamma"></span>
+		<span class="star-dot delta"></span>
+		<span class="star-dot epsilon"></span>
+		<span class="star-dot zeta"></span>
+		<span class="star-dot eta"></span>
+		<span class="star-dot theta"></span>
+		<span class="star-dot iota"></span>
+		<span class="star-dot kappa"></span>
+		<span class="star-dot lambda"></span>
+		<span class="star-dot mu"></span>
+		<span class="star-dot nu"></span>
+		<span class="star-dot xi"></span>
+		<span class="star-dot omicron"></span>
+		<span class="star-dot pi"></span>
+		<span class="star-dot rho"></span>
+		<span class="star-dot sigma"></span>
+		<span class="star-dot tau"></span>
+		<span class="star-dot upsilon"></span>
+		<span class="star-dot phi"></span>
+		<span class="star-dot chi"></span>
 	</div>
 	<div class="terrain" aria-hidden="true"></div>
 
@@ -71,7 +97,7 @@ const helpLines = [
 			radial-gradient(circle at 31% 8%, #ffffff 0 1px, transparent 1.5px),
 			radial-gradient(circle at 52% 36%, #ffffff 0 1.5px, transparent 2px),
 			radial-gradient(circle at 72% 16%, #ffffff 0 1px, transparent 1.5px),
-			radial-gradient(circle at 94% 19%, #ffffff 0 1.5px, transparent 2px),
+			radial-gradient(circle at 88% 18%, #ffffff 0 1.5px, transparent 2px),
 			radial-gradient(circle at 2% 63%, rgba(95, 230, 255, 0.55) 0 1px, transparent 1.5px),
 			linear-gradient(180deg, rgba(1, 7, 16, 0.08), rgba(1, 6, 14, 0.85));
 	}
@@ -86,6 +112,7 @@ const helpLines = [
 	.stars {
 		position: absolute;
 		inset: 0;
+		z-index: 1;
 		pointer-events: none;
 	}
 
@@ -208,49 +235,267 @@ const helpLines = [
 
 	.asteroid {
 		position: absolute;
-		z-index: 1;
 		display: block;
-		border-radius: 45% 55% 50% 50%;
-		background:
-			radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.75), transparent 12%),
-			radial-gradient(circle at 70% 65%, rgba(0, 0, 0, 0.42), transparent 18%),
-			linear-gradient(135deg, #718091, #263140 56%, #131b25);
-		box-shadow:
-			inset -14px -18px 24px rgba(0, 0, 0, 0.42),
-			0 0 22px rgba(206, 230, 255, 0.08);
-		opacity: 0.78;
-		animation: float 8s ease-in-out infinite;
+		height: auto;
+		filter:
+			drop-shadow(0 0 10px rgba(95, 230, 255, 0.14))
+			drop-shadow(0 10px 14px rgba(0, 0, 0, 0.22));
+		image-rendering: pixelated;
+		opacity: 0.68;
+		transform-origin: center;
+		will-change: transform;
 	}
 
 	.one {
-		top: 7%;
-		left: 41%;
-		width: 78px;
-		aspect-ratio: 1;
+		--base-rotate: -18deg;
+		--scale: 1;
+		top: 6%;
+		left: 40%;
+		width: 96px;
+		animation: asteroidDriftOne 28s ease-in-out infinite;
 	}
 
 	.two {
-		top: 22%;
-		left: 17%;
-		width: 38px;
-		aspect-ratio: 1;
-		animation-delay: -2s;
+		--base-rotate: 31deg;
+		--scale: 0.52;
+		top: 21%;
+		left: 16%;
+		width: 86px;
+		opacity: 0.56;
+		animation: asteroidDriftTwo 34s ease-in-out -8s infinite;
 	}
 
 	.three {
+		--base-rotate: 118deg;
+		--scale: 0.34;
 		top: 8%;
 		left: 9%;
-		width: 26px;
-		aspect-ratio: 1;
-		animation-delay: -3s;
+		width: 78px;
+		opacity: 0.44;
+		animation: asteroidDriftThree 31s ease-in-out -14s infinite;
 	}
 
 	.four {
-		right: -1%;
+		--base-rotate: -64deg;
+		--scale: 0.7;
+		right: -2%;
 		top: 34%;
-		width: 54px;
+		width: 92px;
+		opacity: 0.48;
+		animation: asteroidDriftFour 37s ease-in-out -18s infinite;
+	}
+
+	.five {
+		--base-rotate: 206deg;
+		--scale: 0.42;
+		right: 7%;
+		bottom: 22%;
+		width: 80px;
+		opacity: 0.38;
+		animation: asteroidDriftFive 42s ease-in-out -12s infinite;
+	}
+
+	.six {
+		--base-rotate: 77deg;
+		--scale: 0.46;
+		top: 16%;
+		right: 27%;
+		width: 82px;
+		opacity: 0.36;
+		animation: asteroidDriftSix 39s ease-in-out -20s infinite;
+	}
+
+	.seven {
+		--base-rotate: -132deg;
+		--scale: 0.32;
+		bottom: 16%;
+		left: 32%;
+		width: 74px;
+		opacity: 0.32;
+		animation: asteroidDriftSeven 45s ease-in-out -26s infinite;
+	}
+
+	.star-dot {
+		--star-alpha: 0.72;
+		--star-color: rgba(239, 247, 255, 0.84);
+		--star-glow: 10px;
+		--star-size: 3px;
+		position: absolute;
+		display: block;
+		width: var(--star-size);
 		aspect-ratio: 1;
-		animation-delay: -4s;
+		border-radius: 50%;
+		background: currentColor;
+		box-shadow: 0 0 var(--star-glow) currentColor;
+		color: var(--star-color);
+		opacity: var(--star-alpha);
+	}
+
+	.alpha {
+		--star-alpha: 0.92;
+		--star-size: 2px;
+		top: 14%;
+		left: 30%;
+	}
+
+	.beta {
+		--star-alpha: 0.68;
+		--star-color: rgba(94, 255, 181, 0.82);
+		--star-glow: 8px;
+		--star-size: 3px;
+		top: 30%;
+		left: 58%;
+	}
+
+	.gamma {
+		--star-alpha: 0.75;
+		--star-size: 2px;
+		top: 13%;
+		right: 19%;
+	}
+
+	.delta {
+		--star-alpha: 0.58;
+		--star-color: rgba(255, 227, 94, 0.78);
+		--star-size: 2px;
+		top: 45%;
+		left: 5%;
+	}
+
+	.epsilon {
+		--star-alpha: 0.62;
+		--star-size: 3px;
+		right: 8%;
+		bottom: 28%;
+	}
+
+	.zeta {
+		--star-alpha: 0.8;
+		--star-size: 2px;
+		top: 21%;
+		right: 12%;
+	}
+
+	.eta {
+		--star-alpha: 0.9;
+		--star-size: 2px;
+		top: 38%;
+		left: 52%;
+	}
+
+	.theta {
+		--star-alpha: 0.42;
+		--star-color: rgba(95, 230, 255, 0.8);
+		--star-size: 2px;
+		bottom: 34%;
+		left: 2%;
+	}
+
+	.iota {
+		--star-alpha: 0.36;
+		--star-glow: 6px;
+		--star-size: 1px;
+		top: 18%;
+		left: 63%;
+	}
+
+	.kappa {
+		--star-alpha: 0.5;
+		--star-size: 2px;
+		top: 26%;
+		right: 33%;
+	}
+
+	.lambda {
+		--star-alpha: 0.46;
+		--star-color: rgba(95, 230, 255, 0.78);
+		--star-size: 1px;
+		left: 45%;
+		bottom: 23%;
+	}
+
+	.mu {
+		--star-alpha: 0.66;
+		--star-size: 2px;
+		right: 18%;
+		bottom: 12%;
+	}
+
+	.nu {
+		--star-alpha: 0.34;
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 10%;
+		right: 41%;
+	}
+
+	.xi {
+		--star-alpha: 0.76;
+		--star-size: 2px;
+		top: 27%;
+		left: 3%;
+	}
+
+	.omicron {
+		--star-alpha: 0.4;
+		--star-color: rgba(255, 227, 94, 0.72);
+		--star-size: 1px;
+		top: 52%;
+		right: 9%;
+	}
+
+	.pi {
+		--star-alpha: 0.88;
+		--star-size: 2px;
+		top: 22%;
+		left: 36%;
+	}
+
+	.rho {
+		--star-alpha: 0.44;
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 17%;
+		left: 74%;
+	}
+
+	.sigma {
+		--star-alpha: 0.58;
+		--star-size: 2px;
+		top: 41%;
+		right: 24%;
+	}
+
+	.tau {
+		--star-alpha: 0.32;
+		--star-color: rgba(95, 230, 255, 0.76);
+		--star-glow: 5px;
+		--star-size: 1px;
+		left: 38%;
+		bottom: 17%;
+	}
+
+	.upsilon {
+		--star-alpha: 0.7;
+		--star-size: 2px;
+		right: 5%;
+		bottom: 42%;
+	}
+
+	.phi {
+		--star-alpha: 0.38;
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 34%;
+		right: 15%;
+	}
+
+	.chi {
+		--star-alpha: 0.52;
+		--star-color: rgba(239, 247, 255, 0.78);
+		--star-size: 2px;
+		left: 48%;
+		bottom: 9%;
 	}
 
 	.tooltip {
@@ -318,18 +563,96 @@ const helpLines = [
 		}
 	}
 
-	@keyframes float {
-		50% {
-			transform: translate3d(8px, -12px, 0) rotate(8deg);
-		}
-	}
-
 	@keyframes drift {
 		to {
 			background-position:
 				160px 0,
 				-192px 0,
 				0 0;
+		}
+	}
+
+	@keyframes asteroidDriftOne {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(24px, -16px, 0) rotate(calc(var(--base-rotate) + 10deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftTwo {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(-18px, 18px, 0) rotate(calc(var(--base-rotate) - 14deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftThree {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(20px, 14px, 0) rotate(calc(var(--base-rotate) + 18deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftFour {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(-28px, -10px, 0) rotate(calc(var(--base-rotate) - 9deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftFive {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(18px, 12px, 0) rotate(calc(var(--base-rotate) + 12deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftSix {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(-16px, -18px, 0) rotate(calc(var(--base-rotate) - 11deg))
+				scale(var(--scale));
+		}
+	}
+
+	@keyframes asteroidDriftSeven {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--scale));
+		}
+
+		50% {
+			transform: translate3d(14px, -12px, 0) rotate(calc(var(--base-rotate) + 9deg))
+				scale(var(--scale));
 		}
 	}
 
@@ -362,6 +685,28 @@ const helpLines = [
 			padding: 32px 18px 92px;
 		}
 
+		.one {
+			--scale: 0.46;
+			top: 4%;
+			left: 70%;
+			width: 86px;
+			opacity: 0.45;
+		}
+
+		.two,
+		.three,
+		.four,
+		.five,
+		.six,
+		.seven,
+		.beta,
+		.delta,
+		.eta,
+		.lambda,
+		.xi {
+			display: none;
+		}
+
 		.actions a {
 			width: 100%;
 		}
@@ -371,6 +716,21 @@ const helpLines = [
 			left: 14px;
 			width: auto;
 			grid-template-columns: 28px 1fr 24px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-copy,
+		.terminal-wrap,
+		.terrain,
+		.asteroid,
+		h1 span,
+		.tooltip {
+			animation: none;
+		}
+
+		.asteroid {
+			transform: rotate(var(--base-rotate)) scale(var(--scale));
 		}
 	}
 </style>
