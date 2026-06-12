@@ -9,16 +9,19 @@ const infoIcon = '/pixelarticons/info-box.svg';
 
 const helpLines = [
 	'<span class="dim">available commands:</span>',
-	'<span class="cmd">projects</span> - list deployed projects',
-	'<span class="cmd">skills</span> - view my tech arsenal',
-	'<span class="cmd">experience</span> - quest log (work history)',
+	'<span class="cmd">help</span> - show available commands',
+	'<span class="cmd">ls [folder]</span> - list files and folders',
+	'<span class="cmd">cd &lt;folder&gt;</span> - change directory',
+	'<span class="cmd">pwd</span> - print current directory',
+	'<span class="cmd">cat &lt;file&gt;</span> - read a file',
+	'<span class="cmd">tree</span> - show the tiny filesystem',
+	'<span class="cmd">echo &lt;text&gt;</span> - print text back',
+	'<span class="cmd">grep &lt;text&gt; &lt;file&gt;</span> - search a readable file',
 	'<span class="cmd">contact</span> - get in touch',
-	'<span class="cmd">fun-facts</span> - useless but interesting',
-	'<span class="cmd">bugs</span> - known issues (there are some)',
+	'<span class="cmd">sudo hire-me</span> - run the important command',
+	'<span class="cmd">mkdir / touch / rm</span> - try static-site file ops',
 	'<span class="cmd">easter-egg</span> - ???',
-	'<span class="cmd">sudo hire-me</span> - instantly get hired*',
-	'<span class="cmd">clear</span> - clear the screen',
-	'<span class="cmd">exit</span> - leave (why tho?)',
+	'<span class="cmd">clear</span> - clear this terminal',
 ];
 ---
 
@@ -149,7 +152,7 @@ const helpLines = [
 
 	h1 span {
 		color: #e5f9ff;
-		animation: blink 980ms steps(2, end) infinite;
+		animation: cursorPulse 620ms ease-in-out infinite alternate;
 	}
 
 	.role {
@@ -639,9 +642,14 @@ const helpLines = [
 		}
 	}
 
-	@keyframes blink {
-		50% {
-			opacity: 0;
+	@keyframes cursorPulse {
+		from {
+			opacity: 1;
+			filter: brightness(1.15);
+		}
+		to {
+			opacity: 0.28;
+			filter: brightness(0.86);
 		}
 	}
 

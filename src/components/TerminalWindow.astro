@@ -4,12 +4,14 @@ interface Props {
 	command?: string;
 	lines?: string[];
 	wide?: boolean;
+	interactive?: boolean;
 }
 
-const { title, command = 'help', lines = [], wide = false } = Astro.props;
+const { title, command = 'help', lines = [], wide = false, interactive = false } = Astro.props;
+const inputId = `terminal-input-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 ---
 
-<article class:list={['terminal', { wide }]}>
+<article class:list={['terminal', { wide, interactive }]} data-terminal-interactive={interactive}>
 	<header>
 		<span>&gt; {title}</span>
 		<div class="lights" aria-hidden="true">
@@ -19,19 +21,677 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 		</div>
 	</header>
 	<div class="terminal-body">
-		<p class="command">arib@portfolio:~$ <span>{command}</span></p>
+		<p class="command" data-terminal-boot-command={interactive}>
+			arib@portfolio:~$ <span data-terminal-boot-command-text>{command}</span>
+		</p>
 		{
 			lines.length > 0 && (
 				<div class="lines">
 					{lines.map((line) => (
-						<p set:html={line} />
+						<p data-terminal-boot-line={interactive} set:html={line} />
 					))}
 				</div>
 			)
 		}
-		<p class="command prompt">arib@portfolio:~$ <span class="cursor"></span></p>
+		{
+			interactive ? (
+				<>
+					<div class="terminal-history" data-terminal-history></div>
+					<form class="terminal-form" data-terminal-form>
+						<label class="command prompt-label" for={inputId}>
+							arib@portfolio:<span data-terminal-path>~</span>$
+						</label>
+						<input
+							id={inputId}
+							data-terminal-input
+							class="terminal-input"
+							type="text"
+							autocomplete="off"
+							autocapitalize="none"
+							autocorrect="off"
+							spellcheck="false"
+							aria-label="Terminal command"
+						/>
+						<span class="terminal-entry" data-terminal-entry aria-hidden="true">
+							<span data-terminal-typed></span><span class="terminal-block-cursor"></span>
+						</span>
+					</form>
+				</>
+			) : (
+				<p class="command prompt">arib@portfolio:~$ <span class="cursor"></span></p>
+			)
+		}
 	</div>
 </article>
+
+<script>
+	const directories = {
+		'~': {
+			dirs: ['projects', 'skills', 'contact', 'secrets'],
+			files: ['about.txt', 'resume.pdf'],
+		},
+		'~/projects': {
+			dirs: [],
+			files: ['portfolio-v2.md', 'dev-tools.md', 'interactive-experiments.md'],
+		},
+		'~/skills': {
+			dirs: [],
+			files: ['frontend.ts', 'backend.ts', 'ai-tools.ts', 'debugging.ts'],
+		},
+		'~/contact': {
+			dirs: [],
+			files: ['email.txt', 'github.url', 'linkedin.url'],
+		},
+		'~/secrets': {
+			dirs: [],
+			files: ['easter-egg.txt'],
+		},
+	};
+
+	const fileContents = {
+		'~/about.txt': [
+			'Arib Farooqui - Software Engineer',
+			'I build interactive experiences, developer tools, and useful web systems.',
+		],
+		'~/resume.pdf': ['Binary-ish artifact detected. Try the Download Resume button above.'],
+		'~/projects/portfolio-v2.md': ['This site. Terminal now accepts commands.'],
+		'~/projects/dev-tools.md': ['Small tools, automation, and interfaces that remove repeated work.'],
+		'~/projects/interactive-experiments.md': [
+			'Game-like UI, playful microinteractions, and browser-native prototypes.',
+		],
+		'~/skills/frontend.ts': ['Astro, React, TypeScript, CSS, animation, accessibility.'],
+		'~/skills/backend.ts': ['APIs, databases, auth flows, integrations, deployment.'],
+		'~/skills/ai-tools.ts': ['LLM workflows, retrieval, agent tooling, automation.'],
+		'~/skills/debugging.ts': ['Breakpoints, traces, repros, and the occasional stare-off with logs.'],
+		'~/contact/email.txt': ['hello@arib.dev'],
+		'~/contact/github.url': ['https://github.com/aribfarooqui'],
+		'~/contact/linkedin.url': ['https://www.linkedin.com/'],
+		'~/secrets/easter-egg.txt': ['You found the quiet folder. Try `easter-egg`.'],
+	};
+
+	const helpLines = [
+		['help', 'show available commands'],
+		['ls [folder]', 'list files and folders'],
+		['cd <folder>', 'change directory'],
+		['pwd', 'print current directory'],
+		['cat <file>', 'read a file'],
+		['tree', 'show the tiny filesystem'],
+		['echo <text>', 'print text back'],
+		['grep <text> <file>', 'search a readable file'],
+		['contact', 'show contact links'],
+		['sudo hire-me', 'run the important command'],
+		['mkdir <name>', 'attempt to create a folder'],
+		['touch/rm/cp/mv', 'try common file operations'],
+		['easter-egg', '???'],
+		['clear', 'clear this terminal'],
+	];
+
+	const commandNames = [
+		'cat',
+		'cd',
+		'chmod',
+		'chown',
+		'clear',
+		'contact',
+		'cp',
+		'date',
+		'easter-egg',
+		'echo',
+		'exit',
+		'grep',
+		'help',
+		'ls',
+		'man',
+		'mkdir',
+		'mv',
+		'nano',
+		'pwd',
+		'rm',
+		'rmdir',
+		'sudo',
+		'touch',
+		'tree',
+		'uname',
+		'vi',
+		'vim',
+		'whoami',
+	];
+
+	const escapeHtml = (value) =>
+		value.replace(/[&<>"']/g, (char) => {
+			const entities = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;',
+			};
+			return entities[char];
+		});
+
+	const normalizePath = (cwd, target = '', fallback = cwd) => {
+		const rawTarget = target.trim();
+		if (!rawTarget) return fallback;
+		if (rawTarget === '~') return '~';
+		const parts = rawTarget.startsWith('~')
+			? rawTarget.slice(1).split('/')
+			: rawTarget.startsWith('/')
+				? rawTarget.split('/')
+				: `${cwd}/${rawTarget}`.replace(/^~\/?/, '').split('/');
+
+		const resolved = [];
+		for (const part of parts) {
+			if (!part || part === '.') continue;
+			if (part === '..') {
+				resolved.pop();
+				continue;
+			}
+			resolved.push(part);
+		}
+
+		return resolved.length > 0 ? `~/${resolved.join('/')}` : '~';
+	};
+
+	const listDirectory = (path) => {
+		const directory = directories[path];
+		if (!directory) return null;
+		return [
+			...directory.dirs.map((entry) => ({ text: `${entry}/`, className: 'directory' })),
+			...directory.files.map((entry) => ({ text: entry })),
+		];
+	};
+
+	const directoryEntries = (path, dirsOnly = false) => {
+		const directory = directories[path];
+		if (!directory) return [];
+		const dirs = directory.dirs.map((name) => ({ name, type: 'dir' }));
+		const files = dirsOnly ? [] : directory.files.map((name) => ({ name, type: 'file' }));
+		return [...dirs, ...files];
+	};
+
+	const fileAt = (cwd, target) => fileContents[normalizePath(cwd, target)];
+
+	const stripFlags = (args) => args.filter((arg) => !arg.startsWith('-'));
+
+	const createLine = (text, className = '') => {
+		const line = document.createElement('p');
+		line.className = ['terminal-output-line', className].filter(Boolean).join(' ');
+		line.textContent = text;
+		return line;
+	};
+
+	const createCommandLine = (promptCwd, command) => {
+		const line = document.createElement('p');
+		const prompt = document.createElement('span');
+		const typedCommand = document.createElement('span');
+
+		line.className = 'terminal-output-line command-entry';
+		prompt.className = 'terminal-command-prompt';
+		typedCommand.className = 'terminal-command-text';
+		prompt.textContent = `arib@portfolio:${promptCwd}$ `;
+		typedCommand.textContent = command;
+		line.append(prompt, typedCommand);
+
+		return line;
+	};
+
+	const commonPrefix = (values) => {
+		if (values.length === 0) return '';
+		let prefix = values[0];
+		for (const value of values.slice(1)) {
+			while (!value.startsWith(prefix)) {
+				prefix = prefix.slice(0, -1);
+			}
+		}
+		return prefix;
+	};
+
+	const splitPathToken = (token) => {
+		const slashIndex = token.lastIndexOf('/');
+		if (slashIndex === -1) return { parentToken: '', partial: token };
+		return {
+			parentToken: token.slice(0, slashIndex + 1),
+			partial: token.slice(slashIndex + 1),
+		};
+	};
+
+	const completePath = (cwd, token, dirsOnly = false) => {
+		const { parentToken, partial } = splitPathToken(token);
+		const parentPath = parentToken ? normalizePath(cwd, parentToken) : cwd;
+		const matches = directoryEntries(parentPath, dirsOnly).filter((entry) =>
+			entry.name.startsWith(partial),
+		);
+
+		if (matches.length === 0) return null;
+
+		const displayMatches = matches.map((entry) => ({
+			text: `${parentToken}${entry.name}${entry.type === 'dir' ? '/' : ''}`,
+			className: entry.type === 'dir' ? 'directory' : '',
+		}));
+
+		if (matches.length === 1) {
+			const [match] = matches;
+			return {
+				value: `${parentToken}${match.name}${match.type === 'dir' ? '/' : ' '}`,
+				matches: displayMatches,
+			};
+		}
+
+		const prefix = commonPrefix(matches.map((entry) => entry.name));
+		return {
+			value: prefix.length > partial.length ? `${parentToken}${prefix}` : null,
+			matches: displayMatches,
+		};
+	};
+
+	const completeInput = (value, state) => {
+		const leadingWhitespace = value.match(/^\s*/)?.[0] || '';
+		const trimmedStart = value.trimStart();
+		const parts = trimmedStart.split(/\s+/);
+		const command = parts[0] || '';
+		const hasCommandOnly = !trimmedStart.includes(' ');
+
+		if (!command) {
+			return { matches: commandNames.map((name) => ({ text: name })) };
+		}
+
+		if (hasCommandOnly) {
+			const matches = commandNames.filter((name) => name.startsWith(command));
+			if (matches.length === 0) return null;
+			if (matches.length === 1) return { value: `${leadingWhitespace}${matches[0]} `, matches };
+
+			const prefix = commonPrefix(matches);
+			return {
+				value: prefix.length > command.length ? `${leadingWhitespace}${prefix}` : null,
+				matches: matches.map((text) => ({ text })),
+			};
+		}
+
+		if (command === 'sudo') {
+			const subcommand = parts[1] || '';
+			if ('hire-me'.startsWith(subcommand)) return { value: 'sudo hire-me ', matches: [{ text: 'hire-me' }] };
+			return null;
+		}
+
+		const pathCommands = new Set(['ls', 'cd', 'cat', 'grep']);
+		if (!pathCommands.has(command)) return null;
+
+		const lastToken = parts.at(-1) || '';
+		const dirsOnly = command === 'cd';
+		const completion = completePath(state.cwd, lastToken, dirsOnly);
+		if (!completion) return null;
+
+		const replacePattern = new RegExp(`${lastToken.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`);
+		return {
+			value: completion.value ? value.replace(replacePattern, completion.value) : null,
+			matches: completion.matches,
+		};
+	};
+
+	const runCommand = (rawCommand, state) => {
+		const command = rawCommand.trim();
+		const lowerCommand = command.toLowerCase();
+		const [name, ...args] = command.split(/\s+/);
+		const lowerName = (name || '').toLowerCase();
+
+		if (!command) return [];
+		if (lowerCommand === 'clear') return 'clear';
+		if (lowerCommand === 'sudo hire-me') {
+			return [
+				{ text: 'Checking qualifications...' },
+				{ text: 'Overqualified.', className: 'ok' },
+				{ text: 'Opening best next step: email hello@arib.dev', className: 'accent' },
+			];
+		}
+		if (lowerCommand === 'easter-egg') {
+			return [
+				{ text: 'Achievement unlocked: looked under the floorboards.', className: 'accent' },
+				{ text: 'Secret command discovered. Status: still hireable.' },
+			];
+		}
+
+		switch (lowerName) {
+			case 'man':
+			case 'help':
+				return helpLines.map(([cmd, description]) => ({
+					html: `<span class="cmd">${escapeHtml(cmd)}</span> - ${escapeHtml(description)}`,
+				}));
+			case 'ls': {
+				const target = normalizePath(state.cwd, stripFlags(args).join(' '));
+				const entries = listDirectory(target);
+				if (!entries) {
+					return [{ text: `ls: cannot access '${args.join(' ')}': No such directory`, className: 'error' }];
+				}
+				return entries;
+			}
+			case 'cd': {
+				const target = normalizePath(state.cwd, args.join(' '), '~');
+				if (!directories[target]) {
+					const fileExists = Boolean(fileContents[target]);
+					return [
+						{
+							text: fileExists
+								? `cd: not a directory: ${args.join(' ')}`
+								: `cd: no such directory: ${args.join(' ')}`,
+							className: 'error',
+						},
+					];
+				}
+				state.cwd = target;
+				return [];
+			}
+			case 'pwd':
+				return [{ text: state.cwd }];
+			case 'cat': {
+				if (args.length === 0) return [{ text: 'cat: missing file operand', className: 'error' }];
+				const contents = fileAt(state.cwd, args.join(' '));
+				return contents ? contents.map((text) => ({ text })) : [{ text: `cat: ${args.join(' ')}: No such file`, className: 'error' }];
+			}
+			case 'tree':
+				return [
+					{ text: '~' },
+					{ text: '|-- about.txt' },
+					{ text: '|-- resume.pdf' },
+					{ text: '|-- projects/' },
+					{ text: '|   |-- portfolio-v2.md' },
+					{ text: '|   |-- dev-tools.md' },
+					{ text: '|   `-- interactive-experiments.md' },
+					{ text: '|-- skills/' },
+					{ text: '|-- contact/' },
+					{ text: '`-- secrets/' },
+				];
+			case 'echo':
+				return [{ text: args.join(' ') }];
+			case 'grep': {
+				if (args.length < 2) return [{ text: 'grep: usage: grep <text> <file>', className: 'error' }];
+				const [query, ...fileArgs] = args;
+				const contents = fileAt(state.cwd, fileArgs.join(' '));
+				if (!contents) return [{ text: `grep: ${fileArgs.join(' ')}: No such file`, className: 'error' }];
+				const matches = contents.filter((line) => line.toLowerCase().includes(query.toLowerCase()));
+				return matches.length > 0 ? matches.map((text) => ({ text })) : [{ text: '(no matches)' }];
+			}
+			case 'mkdir':
+				return [
+					{
+						text: `mkdir: cannot create directory '${args.join(' ') || 'new-folder'}': read-only static site`,
+						className: 'error',
+					},
+					{ text: 'Try again after this portfolio grows a backend and a tiny sense of responsibility.' },
+				];
+			case 'touch':
+				return [
+					{ text: `Touched ${args.join(' ') || 'nothing'} emotionally. Filesystem unchanged.` },
+				];
+			case 'rm':
+				return [
+					{ text: 'rm: refused. Deleting portfolio files from the browser would be a career-limiting feature.', className: 'error' },
+				];
+			case 'rmdir':
+				return [{ text: 'rmdir: directories here are decorative and emotionally load-bearing.', className: 'error' }];
+			case 'cp':
+				return [{ text: 'cp: copied the idea, not the file. Static site privileges are limited.' }];
+			case 'mv':
+				return [{ text: 'mv: everything stayed exactly where it was. Very on brand for static hosting.' }];
+			case 'chmod':
+			case 'chown':
+				return [{ text: `${lowerName}: permission model unavailable. This is HTML with confidence.`, className: 'error' }];
+			case 'nano':
+			case 'vim':
+			case 'vi':
+				return [{ text: `${lowerName}: editor unavailable. Also, there is no escape room here.` }];
+			case 'uname':
+				return [{ text: 'portfolio static-site 1.0.0 astro/browser x86_64-ish' }];
+			case 'contact':
+				return [
+					{ text: 'Email: hello@arib.dev', className: 'accent' },
+					{ text: 'GitHub: https://github.com/aribfarooqui' },
+					{ text: 'LinkedIn: https://www.linkedin.com/' },
+				];
+			case 'sudo':
+				return [{ text: 'sudo: nice try. Only `sudo hire-me` is allowed.', className: 'error' }];
+			case 'whoami':
+				return [{ text: 'visitor' }];
+			case 'date':
+				return [{ text: new Date().toLocaleString() }];
+			case 'exit':
+				return [{ text: 'Session preserved. This terminal refuses to quit.', className: 'accent' }];
+			default:
+				return [
+					{
+						text: `${name}: command not found. Type 'help' for available commands.`,
+						className: 'error',
+					},
+				];
+		}
+	};
+
+	const wait = (milliseconds) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+
+	const typeText = async (element, text, delay = 24) => {
+		element.textContent = '';
+		for (const character of text) {
+			element.textContent += character;
+			await wait(delay);
+		}
+	};
+
+	const playBootAnimation = async (terminal, input) => {
+		const commandText = terminal.querySelector('[data-terminal-boot-command-text]');
+		const bootLines = [...terminal.querySelectorAll('[data-terminal-boot-line="true"]')];
+
+		if (!(commandText instanceof HTMLElement)) return;
+
+		const originalCommand = commandText.textContent || '';
+		const lines = bootLines.map((line) => ({
+			element: line,
+			html: line.innerHTML,
+			text: line.textContent || '',
+		}));
+
+		terminal.dataset.terminalAnimating = 'true';
+		input.disabled = true;
+		input.setAttribute('aria-disabled', 'true');
+		commandText.textContent = '';
+		lines.forEach(({ element }) => {
+			element.innerHTML = '&nbsp;';
+		});
+
+		await wait(240);
+		await typeText(commandText, originalCommand, 34);
+		await wait(140);
+
+		for (const line of lines) {
+			await typeText(line.element, line.text, 12);
+			line.element.innerHTML = line.html;
+			await wait(95);
+		}
+
+		delete terminal.dataset.terminalAnimating;
+		terminal.dataset.terminalAnimationComplete = 'true';
+		input.disabled = false;
+		input.removeAttribute('aria-disabled');
+		input.focus();
+	};
+
+	const bootInteractiveTerminals = () => {
+		const terminals = document.querySelectorAll('[data-terminal-interactive="true"]');
+
+		terminals.forEach((terminal) => {
+			if (!(terminal instanceof HTMLElement) || terminal.dataset.terminalReady === 'true') return;
+
+			const form = terminal.querySelector('[data-terminal-form]');
+			const input = terminal.querySelector('[data-terminal-input]');
+			const history = terminal.querySelector('[data-terminal-history]');
+			const path = terminal.querySelector('[data-terminal-path]');
+			const body = terminal.querySelector('.terminal-body');
+			const typed = terminal.querySelector('[data-terminal-typed]');
+			const bootCommand = terminal.querySelector('[data-terminal-boot-command]');
+			const bootLines = terminal.querySelector('.lines');
+			const state = { cwd: '~', commands: [], index: 0 };
+
+			if (
+				!(form instanceof HTMLFormElement) ||
+				!(input instanceof HTMLInputElement) ||
+				!history ||
+				!path ||
+				!body ||
+				!(typed instanceof HTMLElement)
+			) {
+				return;
+			}
+
+			terminal.dataset.terminalReady = 'true';
+
+			const updatePath = () => {
+				path.textContent = state.cwd;
+			};
+
+			const updateTyped = () => {
+				typed.textContent = input.value;
+			};
+
+			const scrollToBottom = () => {
+				body.scrollTop = body.scrollHeight;
+			};
+
+			const keepPromptVisible = () => {
+				window.requestAnimationFrame(scrollToBottom);
+			};
+
+			const appendOutput = (command, output, promptCwd) => {
+				const commandLine = createCommandLine(promptCwd, command);
+				history.append(commandLine);
+
+				if (output === 'clear') {
+					history.replaceChildren();
+					if (bootCommand instanceof HTMLElement) bootCommand.hidden = true;
+					if (bootLines instanceof HTMLElement) bootLines.hidden = true;
+					return;
+				}
+
+				for (const item of output) {
+					const line = createLine(item.text || '', item.className || '');
+					if (item.html) line.innerHTML = item.html;
+					history.append(line);
+				}
+			};
+
+			const appendCompletionOutput = (command, matches, promptCwd) => {
+				history.append(createCommandLine(promptCwd, command));
+				for (const match of matches) {
+					if (typeof match === 'string') {
+						history.append(createLine(match));
+					} else {
+						history.append(createLine(match.text, match.className || ''));
+					}
+				}
+				scrollToBottom();
+			};
+
+			const submitCommand = () => {
+				const command = input.value;
+				const promptCwd = state.cwd;
+				const output = runCommand(command, state);
+				if (command.trim()) {
+					state.commands.push(command);
+					state.index = state.commands.length;
+				}
+				appendOutput(command, output, promptCwd);
+				input.value = '';
+				updateTyped();
+				updatePath();
+				scrollToBottom();
+			};
+
+			form.addEventListener('submit', (event) => {
+				event.preventDefault();
+				submitCommand();
+			});
+
+			input.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					submitCommand();
+					return;
+				}
+				if (event.key === 'Tab') {
+					event.preventDefault();
+					const completion = completeInput(input.value, state);
+					if (!completion) return;
+					if (completion.value) {
+						input.value = completion.value;
+						updateTyped();
+						keepPromptVisible();
+					}
+					if (!completion.value || completion.matches.length > 1) {
+						appendCompletionOutput(input.value, completion.matches, state.cwd);
+					}
+					return;
+				}
+				if (event.key === 'ArrowUp') {
+					event.preventDefault();
+					state.index = Math.max(0, state.index - 1);
+					input.value = state.commands[state.index] || '';
+					updateTyped();
+					keepPromptVisible();
+				}
+				if (event.key === 'ArrowDown') {
+					event.preventDefault();
+					state.index = Math.min(state.commands.length, state.index + 1);
+					input.value = state.commands[state.index] || '';
+					updateTyped();
+					keepPromptVisible();
+				}
+			});
+
+			input.addEventListener('input', () => {
+				updateTyped();
+				keepPromptVisible();
+			});
+			form.addEventListener('click', () => {
+				if (window.getSelection()?.toString()) return;
+				input.focus();
+			});
+			terminal.addEventListener('click', () => {
+				if (window.getSelection()?.toString()) return;
+				input.focus();
+			});
+			body.addEventListener('pointerdown', (event) => {
+				if (event.target instanceof Element && event.target.closest('[data-terminal-form]')) return;
+				input.blur();
+			});
+
+			const startAnimation = () => {
+				if (terminal.dataset.terminalAnimationStarted === 'true') return;
+				terminal.dataset.terminalAnimationStarted = 'true';
+				playBootAnimation(terminal, input);
+			};
+
+			if ('IntersectionObserver' in window) {
+				const observer = new IntersectionObserver(
+					(entries) => {
+						if (entries.some((entry) => entry.isIntersecting)) {
+							observer.disconnect();
+							startAnimation();
+						}
+					},
+					{ threshold: 0.42 },
+				);
+				observer.observe(terminal);
+			} else {
+				startAnimation();
+			}
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', bootInteractiveTerminals, { once: true });
+	} else {
+		bootInteractiveTerminals();
+	}
+
+	document.addEventListener('astro:page-load', bootInteractiveTerminals);
+</script>
 
 <style>
 	.terminal {
@@ -46,6 +706,8 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 			0 30px 75px rgba(0, 0, 0, 0.38),
 			inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 		overflow: hidden;
+		-webkit-user-select: text;
+		user-select: text;
 	}
 
 	header {
@@ -91,6 +753,16 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 		color: #d8e7f7;
 		font-size: clamp(0.7rem, 0.78vw, 0.9rem);
 		line-height: 1.72;
+		-webkit-user-select: text;
+		user-select: text;
+	}
+
+	.interactive .terminal-body {
+		max-height: min(580px, 76svh);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scroll-behavior: smooth;
+		scrollbar-color: rgba(94, 255, 181, 0.5) rgba(255, 255, 255, 0.06);
 	}
 
 	p {
@@ -107,11 +779,123 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 
 	.lines {
 		margin: 16px 0 18px;
+		-webkit-user-select: text;
+		user-select: text;
+	}
+
+	.terminal-history {
+		margin: 16px 0 0;
+		-webkit-user-select: text;
+		user-select: text;
+	}
+
+	.terminal-form {
+		position: relative;
+		display: flex;
+		align-items: baseline;
+		gap: 0.55rem;
+		margin-top: 4px;
+		user-select: text;
+	}
+
+	.prompt-label {
+		flex: none;
+		white-space: nowrap;
+	}
+
+	.terminal-input {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 1px;
+		height: 1px;
+		border: 0;
+		outline: 0;
+		padding: 0;
+		opacity: 0;
+		background: transparent;
+		color: transparent;
+		font: inherit;
+		caret-color: transparent;
+		cursor: text;
+	}
+
+	.terminal-entry {
+		display: inline;
+		min-width: 1ch;
+		flex: 1;
+		color: var(--text);
+		overflow-wrap: anywhere;
+		white-space: pre-wrap;
+	}
+
+	.terminal-block-cursor {
+		display: inline-block;
+		width: 0.72em;
+		height: 1.16em;
+		margin-left: 2px;
+		background: #c7d7e6;
+		box-shadow: 0 0 12px rgba(94, 255, 181, 0.22);
+		vertical-align: -0.18em;
+		animation: cursorPulse 620ms ease-in-out infinite alternate;
+	}
+
+	.interactive[data-terminal-animating="true"] .terminal-form {
+		opacity: 0.42;
+		pointer-events: none;
+	}
+
+	.interactive[data-terminal-animating="true"] .terminal-block-cursor {
+		animation: none;
+		opacity: 0.25;
+	}
+
+	.interactive[data-terminal-animation-complete="true"] .terminal-form:focus-within .terminal-block-cursor {
+		background: var(--green);
+	}
+
+	.terminal-history :global(.terminal-output-line) {
+		color: #d8e7f7;
+	}
+
+	.terminal-history :global(.terminal-output-line.command-entry) {
+		margin-top: 12px;
+		color: var(--text);
+	}
+
+	.terminal-history :global(.terminal-command-prompt) {
+		color: var(--green);
+	}
+
+	.terminal-history :global(.terminal-command-text) {
+		color: var(--text);
+	}
+
+	.terminal-history :global(.terminal-output-line.directory) {
+		color: var(--cyan);
+	}
+
+	.terminal-history :global(.terminal-output-line.accent) {
+		color: var(--yellow);
+	}
+
+	.terminal-history :global(.terminal-output-line.ok) {
+		color: var(--green);
+	}
+
+	.terminal-history :global(.terminal-output-line.error) {
+		color: var(--red);
 	}
 
 	.lines :global(.cmd) {
 		display: inline-block;
 		min-width: 9.2rem;
+		color: var(--green);
+	}
+
+	.terminal-history :global(.terminal-output-line .cmd) {
+		display: inline-block;
+		min-width: 8.8rem;
 		color: var(--green);
 	}
 
@@ -134,12 +918,17 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 		margin-left: 6px;
 		background: #c7d7e6;
 		vertical-align: -0.18em;
-		animation: blink 980ms steps(2, end) infinite;
+		animation: cursorPulse 620ms ease-in-out infinite alternate;
 	}
 
-	@keyframes blink {
-		50% {
-			opacity: 0;
+	@keyframes cursorPulse {
+		from {
+			opacity: 1;
+			filter: brightness(1.15);
+		}
+		to {
+			opacity: 0.28;
+			filter: brightness(0.86);
 		}
 	}
 
@@ -149,6 +938,19 @@ const { title, command = 'help', lines = [], wide = false } = Astro.props;
 		}
 
 		.lines :global(.cmd) {
+			display: block;
+			min-width: 0;
+		}
+
+		.terminal-form {
+			flex-wrap: wrap;
+		}
+
+		.terminal-input {
+			flex-basis: 100%;
+		}
+
+		.terminal-history :global(.terminal-output-line .cmd) {
 			display: block;
 			min-width: 0;
 		}
