@@ -100,7 +100,9 @@ const projects = [
 		<article class="bugs">
 			<span>Bugs Squashed</span>
 			<strong>287</strong>
-			<img class="alien-icon" src={alienIcon} alt="" width="64" height="50" loading="eager" />
+			<button class="bug-icon-button" type="button" data-bug-squasher aria-label="Squash bug">
+				<img class="alien-icon" src={alienIcon} alt="" width="64" height="50" loading="eager" />
+			</button>
 		</article>
 	</div>
 </Panel>
@@ -298,14 +300,71 @@ const projects = [
 		font-weight: 500;
 	}
 
-	.bugs :global(.alien-icon) {
+	.bug-icon-button {
 		position: absolute;
 		top: 50%;
 		right: 22px;
+		display: grid;
+		place-items: center;
+		width: 70px;
+		height: 56px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		cursor: pointer;
+		transform: translateY(-50%);
+	}
+
+	.bug-icon-button::before {
+		position: absolute;
+		inset: 7px 6px;
+		border-radius: 999px;
+		content: "";
+		background: rgba(94, 255, 181, 0.08);
+		filter: blur(8px);
+		opacity: 0;
+		transform: scale(0.72);
+		transition:
+			opacity 160ms ease,
+			transform 160ms ease;
+	}
+
+	.bug-icon-button .alien-icon {
+		position: relative;
 		width: 64px;
 		height: auto;
 		filter: drop-shadow(0 0 14px rgba(95, 230, 255, 0.24));
-		transform: translateY(-50%);
+		transform-origin: 50% 84%;
+		transition:
+			filter 180ms ease,
+			transform 180ms ease;
+	}
+
+	.bug-icon-button:hover::before,
+	.bug-icon-button:focus-visible::before {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.bug-icon-button:hover .alien-icon,
+	.bug-icon-button:focus-visible .alien-icon {
+		filter:
+			drop-shadow(0 0 14px rgba(95, 230, 255, 0.32))
+			drop-shadow(0 6px 0 rgba(94, 255, 181, 0.14));
+		transform: translateY(-3px) rotate(-3deg);
+	}
+
+	.bug-icon-button:focus-visible {
+		outline: 1px solid rgba(94, 255, 181, 0.72);
+		outline-offset: 4px;
+	}
+
+	.bug-icon-button.is-squashing::before {
+		animation: bug-burst 360ms ease-out;
+	}
+
+	.bug-icon-button.is-squashing .alien-icon {
+		animation: bug-squash 360ms cubic-bezier(0.3, 0, 0.2, 1);
 	}
 
 	@media (max-width: 1420px) {
@@ -326,4 +385,83 @@ const projects = [
 			grid-template-columns: 1fr;
 		}
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.bug-icon-button::before,
+		.bug-icon-button .alien-icon {
+			transition: none;
+		}
+
+		.bug-icon-button:hover .alien-icon,
+		.bug-icon-button:focus-visible .alien-icon {
+			transform: translateY(-2px);
+		}
+
+		.bug-icon-button.is-squashing::before,
+		.bug-icon-button.is-squashing .alien-icon {
+			animation: none;
+		}
+	}
+
+	@keyframes bug-squash {
+		0%,
+		100% {
+			transform: translateY(-3px) scale(1) rotate(-3deg);
+		}
+
+		34% {
+			transform: translateY(5px) scale(1.16, 0.62) rotate(0deg);
+		}
+
+		58% {
+			transform: translateY(-8px) scale(0.84, 1.18) rotate(4deg);
+		}
+
+		78% {
+			transform: translateY(1px) scale(1.04, 0.92) rotate(-2deg);
+		}
+	}
+
+	@keyframes bug-burst {
+		0% {
+			opacity: 0.75;
+			transform: scale(0.7);
+		}
+
+		100% {
+			opacity: 0;
+			transform: scale(1.35);
+		}
+	}
 </style>
+
+<script>
+	document.addEventListener('click', ({ target }) => {
+		if (!(target instanceof Element)) {
+			return;
+		}
+
+		const button = target.closest<HTMLButtonElement>('[data-bug-squasher]');
+
+		if (!button) {
+			return;
+		}
+
+		const activeTimer = Number(button.dataset.animationTimer ?? 0);
+
+		if (activeTimer) {
+			window.clearTimeout(activeTimer);
+		}
+
+		button.classList.remove('is-squashing');
+		void button.offsetWidth;
+		button.classList.add('is-squashing');
+
+		const timer = window.setTimeout(() => {
+			button.classList.remove('is-squashing');
+			delete button.dataset.animationTimer;
+		}, 420);
+
+		button.dataset.animationTimer = String(timer);
+	});
+</script>
