@@ -37,8 +37,8 @@ const mailIcon = '/pixelarticons/mail.svg';
 						<PixelIcon src={mailIcon} />
 					</a>
 				</div>
-				<span>© 2026 Arib Farooqui. All rights reserved.</span>
 				<span class="built">Built with <PixelIcon src={heartIcon} class="footer-heart" /> and too much caffeine</span>
+				<span>© 2026 Arib Farooqui. All rights reserved.</span>
 			</footer>
 		</section>
 	</main>
@@ -78,22 +78,24 @@ const mailIcon = '/pixelarticons/mail.svg';
 
 	.site-footer {
 		display: grid;
-		grid-template-columns: 190px 1fr auto;
-		align-items: center;
-		gap: 18px;
+		justify-items: center;
+		align-content: center;
+		gap: 10px;
 		min-width: 0;
-		padding: 0 28px;
+		padding: 18px 28px;
 		border: 1px solid rgba(148, 183, 220, 0.2);
 		border-radius: 4px;
 		background: rgba(7, 14, 27, 0.76);
 		color: var(--faint);
 		font-size: clamp(0.58rem, 0.68vw, 0.78rem);
+		text-align: center;
 		text-transform: uppercase;
 	}
 
 	.socials {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 16px;
 	}
 
@@ -160,10 +162,7 @@ const mailIcon = '/pixelarticons/mail.svg';
 		}
 
 		.site-footer {
-			grid-template-columns: 1fr;
-			justify-items: center;
 			padding: 16px;
-			text-align: center;
 		}
 	}
 </style>

@@ -41,7 +41,16 @@ const roles = [
 			))
 		}
 	</ol>
-	<div class="ruins" aria-hidden="true"></div>
+	<ul class="experience-bars" aria-hidden="true">
+		<li style="--bar-height: 76px"></li>
+		<li style="--bar-height: 118px"></li>
+		<li style="--bar-height: 92px"></li>
+		<li style="--bar-height: 158px"></li>
+		<li style="--bar-height: 132px"></li>
+		<li style="--bar-height: 186px"></li>
+		<li style="--bar-height: 106px"></li>
+		<li style="--bar-height: 148px"></li>
+	</ul>
 </Panel>
 
 <style>
@@ -68,7 +77,7 @@ const roles = [
 		border-left: 1px dashed rgba(196, 224, 246, 0.42);
 	}
 
-	li {
+	.timeline > li {
 		display: grid;
 		grid-template-columns: minmax(110px, 0.65fr) 24px 1fr;
 		align-items: start;
@@ -118,21 +127,27 @@ const roles = [
 		line-height: 1.55;
 	}
 
-	.ruins {
+	.experience-bars {
 		position: absolute;
-		right: -18px;
-		bottom: -18px;
-		z-index: 0;
-		width: 150px;
-		height: 145px;
-		opacity: 0.18;
-		background:
-			linear-gradient(90deg, transparent 0 16px, #91a4b9 16px 22px, transparent 22px 38px) 0 80px /
-				38px 60px,
-			linear-gradient(#91a4b9, #91a4b9) 88px 52px / 22px 92px no-repeat,
-			linear-gradient(#91a4b9, #91a4b9) 116px 18px / 18px 126px no-repeat,
-			linear-gradient(#91a4b9, #91a4b9) 134px 76px / 15px 68px no-repeat;
-		clip-path: polygon(0 100%, 100% 100%, 100% 0, 84% 11%, 79% 27%, 65% 16%, 56% 33%, 47% 26%, 40% 42%, 25% 32%, 15% 53%, 0 45%);
+		right: clamp(22px, 3.4vw, 58px);
+		bottom: 0;
+		z-index: 1;
+		display: flex;
+		align-items: flex-end;
+		gap: 13px;
+		width: auto;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	.experience-bars li {
+		width: 4px;
+		height: var(--bar-height);
+		background: linear-gradient(180deg, rgba(95, 230, 255, 0.18), rgba(212, 233, 247, 0.82));
+		box-shadow: 0 0 16px rgba(95, 230, 255, 0.2);
 	}
 
 	@media (max-width: 1180px) {
@@ -143,11 +158,15 @@ const roles = [
 	}
 
 	@media (max-width: 560px) {
+		.experience-bars {
+			display: none;
+		}
+
 		.timeline::before {
 			left: 96px;
 		}
 
-		li {
+		.timeline > li {
 			grid-template-columns: 78px 18px 1fr;
 			gap: 12px;
 		}
