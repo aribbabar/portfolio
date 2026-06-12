@@ -3,53 +3,100 @@ import Panel from './Panel.astro';
 
 const roles = [
 	{
-		period: '2025 - Present',
-		title: 'Software Engineer',
-		body: 'Built internal platforms, mobile tools, and automation systems that keep things mostly running.',
+		period: 'Jun 2025 - Present',
+		title: 'Junior Software Engineer',
+		company: 'Impresset Business Services',
+		status: 'Main Quest',
+		body: 'Building and stabilizing a SaaS platform for industry workflows with ASP.NET, front-end tooling, and the occasional "why is email haunted?" support mission.',
+		tags: ['ASP.NET', 'Web Forms', 'SaaS', 'Reliability'],
 	},
 	{
-		period: '2023 - 2025',
-		title: 'Software Engineer',
-		body: 'Worked on operational software, workflow tools, and mobile applications used by real humans.',
+		period: 'Jun 2024 - Nov 2024',
+		title: 'IT Specialist',
+		company: 'Q Computers',
+		status: 'Network Arc',
+		body: 'Set up servers, connected devices, and documented client configurations so local networks could behave like professional adults.',
+		tags: ['Networking', 'Servers', 'LAN', 'Docs'],
 	},
 	{
-		period: '2022 - 2023',
-		title: 'Full Stack Developer',
-		body: 'Shipped web apps, admin dashboards, and APIs. Learned a lot. Broke things. Fixed things.',
+		period: 'Aug 2021 - Dec 2022',
+		title: 'Technical Director',
+		company: 'Distance Education and Technology Services',
+		status: 'Campus Support',
+		body: 'Kept classroom tech, records, and support workflows moving for students, instructors, and staff. Calm under pressure; mostly because panic is expensive.',
+		tags: ['Tech Support', 'Operations', 'Documentation'],
 	},
 	{
-		period: '2021 - 2022',
-		title: 'Developer Intern',
-		body: 'Started the journey. Googled everything. Still do.',
+		period: 'Jan 2017 - Jan 2018',
+		title: 'Web Intern',
+		company: 'Woodlawn Villager',
+		status: 'Origin Story',
+		body: 'Managed and maintained a WordPress blog, learned how content, design, and tiny broken layouts all conspire to teach web development.',
+		tags: ['WordPress', 'Web Design', 'Content'],
 	},
+];
+
+const sideQuests = [
+	'Promoted into expanded office operations at Assured Services within 3 months',
+	'Managed scheduling, payments, proposals, and customer communication without rage-quitting',
+	'Retail leadership at JCPenney taught prioritization, adaptability, and user empathy the hard way',
 ];
 ---
 
 <Panel title="Experience" eyebrow="Quest.Log" class="experience-panel" id="experience">
-	<p slot="intro" class="intro">The journey so far.</p>
+	<p slot="intro" class="intro">
+		Real jobs, real users, and several systems that had opinions.
+	</p>
+	<aside class="side-quests" aria-label="Additional experience">
+		<strong>&gt; Side.Quests</strong>
+		<ul>
+			{
+				sideQuests.map((quest) => (
+					<li>{quest}</li>
+				))
+			}
+		</ul>
+	</aside>
 	<ol class="timeline">
 		{
-			roles.map((role) => (
+			roles.map((role, index) => (
 				<li>
 					<time>{role.period}</time>
 					<span class="node" aria-hidden="true"></span>
-					<div>
+					<article style={`--role-index: ${index}`}>
+						<div class="role-topline">
+							<span class="status">[{role.status}]</span>
+							<span>{role.company}</span>
+						</div>
 						<h3>{role.title}</h3>
 						<p>{role.body}</p>
-					</div>
+						<ul class="role-tags" aria-label={`${role.title} skills`}>
+							{role.tags.map((tag) => (
+								<li>{tag}</li>
+							))}
+						</ul>
+					</article>
 				</li>
 			))
 		}
 	</ol>
 	<ul class="experience-bars" aria-hidden="true">
 		<li style="--bar-height: 76px"></li>
+		<li style="--bar-height: 132px"></li>
+		<li style="--bar-height: 96px"></li>
 		<li style="--bar-height: 118px"></li>
+		<li style="--bar-height: 172px"></li>
 		<li style="--bar-height: 92px"></li>
 		<li style="--bar-height: 158px"></li>
+		<li style="--bar-height: 218px"></li>
 		<li style="--bar-height: 132px"></li>
 		<li style="--bar-height: 186px"></li>
+		<li style="--bar-height: 244px"></li>
 		<li style="--bar-height: 106px"></li>
 		<li style="--bar-height: 148px"></li>
+		<li style="--bar-height: 204px"></li>
+		<li style="--bar-height: 124px"></li>
+		<li style="--bar-height: 168px"></li>
 	</ul>
 </Panel>
 
@@ -62,7 +109,7 @@ const roles = [
 		position: relative;
 		z-index: 1;
 		display: grid;
-		gap: 28px;
+		gap: 22px;
 		padding: 0;
 		margin: 0;
 		list-style: none;
@@ -90,6 +137,44 @@ const roles = [
 		text-transform: uppercase;
 	}
 
+	article {
+		position: relative;
+		max-width: 720px;
+		padding: 15px 16px 16px;
+		border: 1px solid rgba(148, 183, 220, 0.2);
+		border-radius: 5px;
+		background:
+			linear-gradient(180deg, rgba(7, 14, 25, 0.74), rgba(3, 9, 17, 0.72)),
+			radial-gradient(circle at 100% 0, rgba(94, 255, 181, 0.09), transparent 12rem);
+		clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+		animation: role-reveal 560ms calc(var(--role-index) * 90ms) ease both;
+		transition:
+			border-color 160ms ease,
+			box-shadow 160ms ease,
+			transform 160ms ease;
+	}
+
+	article:hover {
+		border-color: rgba(94, 255, 181, 0.5);
+		box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+		transform: translateY(-2px);
+	}
+
+	.role-topline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-bottom: 9px;
+		color: var(--faint);
+		font-size: clamp(0.58rem, 0.64vw, 0.72rem);
+		text-transform: uppercase;
+	}
+
+	.status {
+		color: var(--yellow);
+		font-weight: 800;
+	}
+
 	.node {
 		position: relative;
 		z-index: 2;
@@ -111,6 +196,11 @@ const roles = [
 		border-radius: 50%;
 	}
 
+	.timeline > li:has(article:hover) .node {
+		border-color: var(--green);
+		box-shadow: 0 0 20px rgba(94, 255, 181, 0.32);
+	}
+
 	h3 {
 		margin: 0 0 8px;
 		color: var(--green);
@@ -120,34 +210,98 @@ const roles = [
 	}
 
 	p {
-		max-width: 410px;
 		margin: 0;
 		color: #c6d3e0;
 		font-size: clamp(0.66rem, 0.72vw, 0.82rem);
 		line-height: 1.55;
 	}
 
+	.role-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 0;
+		margin: 14px 0 0;
+		list-style: none;
+	}
+
+	.role-tags li {
+		padding: 4px 6px;
+		border: 1px solid rgba(95, 230, 255, 0.26);
+		border-radius: 3px;
+		color: #d7e5f2;
+		background: rgba(95, 230, 255, 0.055);
+		font-size: clamp(0.55rem, 0.6vw, 0.68rem);
+		text-transform: uppercase;
+	}
+
+	.side-quests {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		justify-items: center;
+		gap: 10px;
+		width: 100%;
+		max-width: 920px;
+		margin: 0 auto clamp(24px, 2vw, 32px);
+		padding: 13px 18px 14px;
+		border: 1px dashed rgba(148, 183, 220, 0.26);
+		border-radius: 5px;
+		background: rgba(5, 12, 22, 0.58);
+		text-align: center;
+	}
+
+	.side-quests strong {
+		color: var(--purple);
+		font-size: clamp(0.62rem, 0.68vw, 0.76rem);
+		text-transform: uppercase;
+	}
+
+	.side-quests ul {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.side-quests li {
+		color: #bac8d7;
+		font-size: clamp(0.6rem, 0.66vw, 0.76rem);
+		line-height: 1.45;
+		text-align: left;
+	}
+
+	.side-quests li::before {
+		color: var(--green);
+		content: "+ ";
+	}
+
 	.experience-bars {
 		position: absolute;
 		right: clamp(22px, 3.4vw, 58px);
-		bottom: 0;
+		top: 0;
 		z-index: 1;
 		display: flex;
-		align-items: flex-end;
-		gap: 13px;
+		align-items: flex-start;
+		gap: clamp(7px, 0.7vw, 12px);
 		width: auto;
 		padding: 0;
 		margin: 0;
 		list-style: none;
 		pointer-events: none;
-		opacity: 0.5;
+		opacity: 0.38;
 	}
 
 	.experience-bars li {
 		width: 4px;
 		height: var(--bar-height);
-		background: linear-gradient(180deg, rgba(95, 230, 255, 0.18), rgba(212, 233, 247, 0.82));
+		background: linear-gradient(180deg, rgba(212, 233, 247, 0.82), rgba(95, 230, 255, 0.16));
 		box-shadow: 0 0 16px rgba(95, 230, 255, 0.2);
+		transform-origin: top;
+		animation: bar-scan 2600ms ease-in-out infinite alternate;
+		animation-delay: calc(var(--bar-height) * -8ms);
 	}
 
 	@media (max-width: 1180px) {
@@ -169,6 +323,49 @@ const roles = [
 		.timeline > li {
 			grid-template-columns: 78px 18px 1fr;
 			gap: 12px;
+		}
+
+		article {
+			padding: 13px 14px 14px;
+		}
+
+		.side-quests ul {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		article,
+		.experience-bars li {
+			animation: none;
+		}
+
+		article:hover {
+			transform: none;
+		}
+	}
+
+	@keyframes role-reveal {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes bar-scan {
+		from {
+			opacity: 0.34;
+			transform: scaleY(0.72);
+		}
+
+		to {
+			opacity: 0.82;
+			transform: scaleY(1);
 		}
 	}
 </style>
