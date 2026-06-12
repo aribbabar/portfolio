@@ -6,6 +6,12 @@ import ProjectsPanel from '../components/ProjectsPanel.astro';
 import SkillsPanel from '../components/SkillsPanel.astro';
 import ExperiencePanel from '../components/ExperiencePanel.astro';
 import HireTerminal from '../components/HireTerminal.astro';
+import PixelIcon from '../components/PixelIcon.astro';
+
+const externalLinkIcon = '/pixelarticons/external-link.svg';
+const heartIcon = '/pixelarticons/heart.svg';
+const linkIcon = '/pixelarticons/link.svg';
+const mailIcon = '/pixelarticons/mail.svg';
 ---
 
 <Layout>
@@ -21,12 +27,18 @@ import HireTerminal from '../components/HireTerminal.astro';
 			<HireTerminal />
 			<footer class="site-footer" aria-label="Portfolio footer">
 				<div class="socials" aria-label="Social links">
-					<a href="https://github.com/aribfarooqui" aria-label="GitHub">GH</a>
-					<a href="https://www.linkedin.com/" aria-label="LinkedIn">IN</a>
-					<a href="mailto:hello@arib.dev" aria-label="Email">ME</a>
+					<a href="https://github.com/aribfarooqui" aria-label="GitHub">
+						<PixelIcon src={externalLinkIcon} />
+					</a>
+					<a href="https://www.linkedin.com/" aria-label="LinkedIn">
+						<PixelIcon src={linkIcon} />
+					</a>
+					<a href="mailto:hello@arib.dev" aria-label="Email">
+						<PixelIcon src={mailIcon} />
+					</a>
 				</div>
 				<span>© 2026 Arib Farooqui. All rights reserved.</span>
-				<span>Built with &lt;3 and too much caffeine</span>
+				<span class="built">Built with <PixelIcon src={heartIcon} class="footer-heart" /> and too much caffeine</span>
 			</footer>
 		</section>
 	</main>
@@ -86,6 +98,10 @@ import HireTerminal from '../components/HireTerminal.astro';
 	}
 
 	.socials a {
+		display: grid;
+		place-items: center;
+		width: 24px;
+		aspect-ratio: 1;
 		color: var(--muted);
 		text-decoration: none;
 		transition:
@@ -96,6 +112,21 @@ import HireTerminal from '../components/HireTerminal.astro';
 	.socials a:hover {
 		color: var(--green);
 		transform: translateY(-1px);
+	}
+
+	.socials a :global(.pixel-icon),
+	.built :global(.pixel-icon) {
+		--pixel-icon-size: 18px;
+	}
+
+	.built {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.built :global(.footer-heart) {
+		color: var(--green);
 	}
 
 	@media (max-width: 1180px) {

@@ -1,36 +1,47 @@
 ---
 import Panel from './Panel.astro';
+import PixelIcon from './PixelIcon.astro';
+import cloudIcon from '../assets/cloud-green.svg?url';
+import codeBlockIcon from '../assets/code-block-green.svg?url';
+import cubeIcon from '../assets/cube-green.svg?url';
+import serverIcon from '../assets/server-green.svg?url';
+import starAssetIcon from '../assets/star-green.svg?url';
+import terminalIcon from '../assets/terminal-green.svg?url';
+
+const shipIcon = '/pixelarticons/ship.svg';
+const sparklesIcon = '/pixelarticons/sparkles.svg';
+const starIcon = '/pixelarticons/star.svg';
 
 const groups = [
 	{
 		title: 'Languages',
-		icon: '</>',
+		icon: codeBlockIcon,
 		items: ['TypeScript', 'JavaScript', 'Python', 'SQL'],
 		tone: 'yellow',
 	},
 	{
 		title: 'Frontend',
-		icon: '[]',
+		icon: cubeIcon,
 		items: ['React', 'Next.js', 'Astro', 'Tailwind CSS'],
 	},
 	{
 		title: 'Backend',
-		icon: '==',
+		icon: serverIcon,
 		items: ['Node.js', 'Express', 'Fastify', 'PostgreSQL'],
 	},
 	{
 		title: 'Tools',
-		icon: '>_',
+		icon: terminalIcon,
 		items: ['Git', 'Docker', 'VS Code', 'Postman'],
 	},
 	{
 		title: 'Cloud / DevOps',
-		icon: '/\\',
+		icon: cloudIcon,
 		items: ['AWS', 'Vercel', 'Nginx', 'GitHub Actions'],
 	},
 	{
 		title: 'Extras',
-		icon: '*',
+		icon: starAssetIcon,
 		items: ['Socket.io', 'Prisma', 'OpenAI API', 'and more...'],
 	},
 ];
@@ -39,13 +50,16 @@ const groups = [
 <Panel title="Tech Arsenal" eyebrow="System.Skills" class="skills-panel" id="skills">
 	<p slot="intro" class="intro">The tools I use to build, break, and ship things.</p>
 	<div class="orbit" aria-hidden="true">
-		<span>ship</span>
+		<PixelIcon src={shipIcon} class="ship-icon" />
+		<PixelIcon src={sparklesIcon} class="orbit-sparkle" />
 	</div>
 	<div class="skills-grid">
 		{
 			groups.map((group) => (
 				<article class="skill-box">
-					<div class="skill-icon">{group.icon}</div>
+					<div class="skill-icon">
+						<img src={group.icon} alt="" width="28" height="28" loading="lazy" />
+					</div>
 					<div>
 						<h3 class={group.tone}>{group.title}</h3>
 						<ul>
@@ -58,7 +72,7 @@ const groups = [
 			))
 		}
 	</div>
-	<p class="learning"><span>[*]</span> Always learning. Currently: better decisions.</p>
+	<p class="learning"><PixelIcon src={starIcon} /> Always learning. Currently: better decisions.</p>
 </Panel>
 
 <style>
@@ -93,20 +107,20 @@ const groups = [
 		transform: rotate(-26deg);
 	}
 
-	.orbit::after {
+	.orbit :global(.orbit-sparkle) {
+		--pixel-icon-size: 18px;
 		position: absolute;
 		right: 0;
 		top: 0;
-		content: "+";
 		color: var(--green);
 	}
 
-	.orbit span {
+	.orbit :global(.ship-icon) {
+		--pixel-icon-size: 24px;
 		position: absolute;
 		left: 24px;
 		top: 46px;
 		color: #d9e9ff;
-		font-size: 0.62rem;
 		text-shadow: 0 0 14px rgba(95, 230, 255, 0.7);
 	}
 
@@ -145,8 +159,13 @@ const groups = [
 		border-radius: 5px;
 		color: var(--green);
 		background: rgba(94, 255, 181, 0.07);
-		font-size: 0.94rem;
-		font-weight: 800;
+	}
+
+	.skill-icon img {
+		display: block;
+		width: 28px;
+		height: auto;
+		filter: drop-shadow(0 0 10px rgba(94, 255, 181, 0.2));
 	}
 
 	h3 {
@@ -194,9 +213,9 @@ const groups = [
 		text-transform: uppercase;
 	}
 
-	.learning span {
+	.learning :global(.pixel-icon) {
+		--pixel-icon-size: 24px;
 		color: var(--green);
-		font-size: 1.3rem;
 	}
 
 	@media (max-width: 1420px) {

@@ -1,0 +1,39 @@
+---
+interface Props {
+	src: string;
+	label?: string;
+	class?: string;
+}
+
+const { src, label, class: className = '' } = Astro.props;
+---
+
+<span
+	class:list={['pixel-icon', className]}
+	style={`--pixel-icon-url: url("${src}")`}
+	role={label ? 'img' : undefined}
+	aria-label={label}
+	aria-hidden={label ? undefined : 'true'}
+></span>
+
+<style>
+	.pixel-icon {
+		display: inline-block;
+		flex: 0 0 auto;
+		width: var(--pixel-icon-size, 24px);
+		aspect-ratio: 1;
+		color: currentColor;
+		line-height: 0;
+	}
+
+	.pixel-icon::before {
+		display: block;
+		width: 100%;
+		height: 100%;
+		content: "";
+		background: currentColor;
+		mask: var(--pixel-icon-url) center / contain no-repeat;
+		-webkit-mask: var(--pixel-icon-url) center / contain no-repeat;
+		image-rendering: pixelated;
+	}
+</style>

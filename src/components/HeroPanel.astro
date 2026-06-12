@@ -1,7 +1,11 @@
 ---
+import PixelIcon from './PixelIcon.astro';
 import TerminalWindow from './TerminalWindow.astro';
 import WaveBackground from './WaveBackground.astro';
 import asteroidSrc from '../assets/aesteroid.svg?url';
+
+const closeIcon = '/pixelarticons/close.svg';
+const infoIcon = '/pixelarticons/info-box.svg';
 
 const helpLines = [
 	'<span class="dim">available commands:</span>',
@@ -71,9 +75,9 @@ const helpLines = [
 	</div>
 
 	<div class="tooltip" role="status">
-		<span aria-hidden="true">[::]</span>
+		<PixelIcon src={infoIcon} class="tooltip-icon" />
 		<p><strong>Tooltip:</strong> Loads too fast to read this message. Suffering from success.</p>
-		<button aria-label="Dismiss tooltip">×</button>
+		<button aria-label="Dismiss tooltip"><PixelIcon src={closeIcon} /></button>
 	</div>
 </section>
 
@@ -542,10 +546,10 @@ const helpLines = [
 		animation: rise 760ms 350ms ease both;
 	}
 
-	.tooltip span {
+	.tooltip :global(.tooltip-icon) {
+		--pixel-icon-size: 24px;
 		color: var(--green);
-		font-size: 1rem;
-		text-align: center;
+		justify-self: center;
 	}
 
 	.tooltip p {
@@ -558,12 +562,18 @@ const helpLines = [
 	}
 
 	.tooltip button {
+		display: grid;
+		place-items: center;
 		width: 24px;
 		aspect-ratio: 1;
 		border: 0;
 		color: var(--text);
 		background: transparent;
 		cursor: pointer;
+	}
+
+	.tooltip button :global(.pixel-icon) {
+		--pixel-icon-size: 18px;
 	}
 
 	@keyframes rise {

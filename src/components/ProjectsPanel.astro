@@ -1,9 +1,10 @@
 ---
 import Panel from './Panel.astro';
-import paletteIcon from '../assets/palette-and-brush.svg?url';
-import brainIcon from '../assets/neon-brain.svg?url';
-import terminalIcon from '../assets/terminal.svg?url';
+import alienIcon from '../assets/alien.svg?url';
 import lockIcon from '../assets/lock.svg?url';
+import brainIcon from '../assets/neon-brain.svg?url';
+import paletteIcon from '../assets/palette-and-brush.svg?url';
+import terminalIcon from '../assets/terminal.svg?url';
 
 const projects = [
 	{
@@ -99,7 +100,7 @@ const projects = [
 		<article class="bugs">
 			<span>Bugs Squashed</span>
 			<strong>287</strong>
-			<i aria-hidden="true">[x]</i>
+			<img class="alien-icon" src={alienIcon} alt="" width="64" height="50" loading="eager" />
 		</article>
 	</div>
 </Panel>
@@ -280,7 +281,7 @@ const projects = [
 		position: relative;
 		display: grid;
 		align-content: center;
-		padding: 18px 22px;
+		padding: 18px 96px 18px 22px;
 		min-height: 80px;
 	}
 
@@ -297,12 +298,14 @@ const projects = [
 		font-weight: 500;
 	}
 
-	.bugs i {
+	.bugs :global(.alien-icon) {
 		position: absolute;
-		right: 28px;
-		bottom: 22px;
-		color: #e0e7f3;
-		font-style: normal;
+		top: 50%;
+		right: 22px;
+		width: 64px;
+		height: auto;
+		filter: drop-shadow(0 0 14px rgba(95, 230, 255, 0.24));
+		transform: translateY(-50%);
 	}
 
 	@media (max-width: 1420px) {

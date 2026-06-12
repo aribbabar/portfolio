@@ -1,5 +1,8 @@
 ---
+import PixelIcon from './PixelIcon.astro';
 import TerminalWindow from './TerminalWindow.astro';
+
+const mailIcon = '/pixelarticons/mail.svg';
 
 const hireLines = [
 	'Checking qualifications...',
@@ -19,7 +22,9 @@ const hireLines = [
 		<h2>&gt; Note.txt</h2>
 		<p>I don't bite.</p>
 		<p>Much.</p>
-		<a href="mailto:hello@arib.dev" aria-label="Email Arib">:)</a>
+		<a href="mailto:hello@arib.dev" aria-label="Email Arib">
+			<PixelIcon src={mailIcon} />
+		</a>
 	</aside>
 </section>
 
@@ -73,13 +78,17 @@ const hireLines = [
 	}
 
 	a {
+		display: grid;
+		place-items: center;
 		position: absolute;
 		right: 22px;
 		bottom: 18px;
 		color: var(--green);
-		font-size: 1.25rem;
 		text-decoration: none;
-		transform: rotate(90deg);
+	}
+
+	a :global(.pixel-icon) {
+		--pixel-icon-size: 24px;
 	}
 
 	@media (max-width: 1180px) {

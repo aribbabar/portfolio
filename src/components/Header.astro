@@ -1,4 +1,8 @@
 ---
+import PixelIcon from './PixelIcon.astro';
+
+const terminalIcon = '/pixelarticons/terminal.svg';
+
 const links = ['Home', 'Projects', 'Skills', 'Experience', 'Contact'];
 ---
 
@@ -13,7 +17,9 @@ const links = ['Home', 'Projects', 'Skills', 'Experience', 'Contact'];
 			))
 		}
 	</nav>
-	<a class="prompt-button" href="#contact" aria-label="Open contact terminal">&gt;_</a>
+	<a class="prompt-button" href="#contact" aria-label="Open contact terminal">
+		<PixelIcon src={terminalIcon} />
+	</a>
 </header>
 
 <style>
@@ -74,6 +80,10 @@ const links = ['Home', 'Projects', 'Skills', 'Experience', 'Contact'];
 		transition:
 			background 160ms ease,
 			transform 160ms ease;
+	}
+
+	.prompt-button :global(.pixel-icon) {
+		--pixel-icon-size: 24px;
 	}
 
 	.prompt-button:hover {
