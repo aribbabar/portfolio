@@ -39,7 +39,7 @@ interface Completion {
 const directories: Record<string, Directory> = {
 	'~': {
 		dirs: ['projects', 'skills', 'contact', 'secrets'],
-		files: ['about.txt', 'resume.pdf'],
+		files: ['about.txt', 'arib-farooqui-resume.pdf'],
 	},
 	'~/projects': {
 		dirs: [],
@@ -64,7 +64,11 @@ const fileContents: Record<string, string[]> = {
 		'Arib Farooqui - Software Engineer',
 		'I build interactive experiences, developer tools, and useful web systems.',
 	],
-	'~/resume.pdf': ['Binary-ish artifact detected. Try the Download Resume button above.'],
+	'~/arib-farooqui-resume.pdf': [
+		'PDF available at /arib-farooqui-resume.pdf. Try the View Resume button above.',
+	],
+	'~/resume-web-safe.pdf': ['PDF moved to arib-farooqui-resume.pdf. Try the View Resume button above.'],
+	'~/resume.pdf': ['PDF moved to arib-farooqui-resume.pdf. Try the View Resume button above.'],
 	'~/projects/portfolio.md': ['This site. Terminal now accepts commands.'],
 	'~/projects/dev-tools.md': ['Small tools, automation, and interfaces that remove repeated work.'],
 	'~/projects/interactive-experiments.md': [
@@ -382,7 +386,7 @@ const runCommand = (rawCommand: string, state: ShellState) => {
 				output: [
 					{ text: '~' },
 					{ text: '|-- about.txt' },
-					{ text: '|-- resume.pdf' },
+					{ text: '|-- arib-farooqui-resume.pdf' },
 					{ text: '|-- projects/' },
 					{ text: '|   |-- portfolio.md' },
 					{ text: '|   |-- dev-tools.md' },
