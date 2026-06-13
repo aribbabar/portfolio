@@ -1,0 +1,371 @@
+---
+import Panel from './Panel.astro';
+import PixelIcon from './PixelIcon.astro';
+import blueJayIcon from '../assets/blue-jay.svg?url';
+import terpIcon from '../assets/terp.svg?url';
+import gitBranchIcon from 'pixelarticons/svg/git-branch.svg?url';
+import notebookIcon from 'pixelarticons/svg/notebook.svg?url';
+
+const education = [
+	{
+		period: 'Jan 2025 - Dec 2029',
+		school: 'Johns Hopkins University',
+		degree: 'M.S. Information Systems Engineering',
+		location: 'Baltimore, MD',
+		status: 'In Progress',
+		icon: blueJayIcon,
+		body: 'Pursuing graduate work in information systems engineering with a software engineering track.',
+		focus: ['Software Engineering', 'Information Systems', 'Systems Design'],
+	},
+	{
+		period: 'Aug 2019 - May 2024',
+		school: 'University of Maryland',
+		degree: 'B.S. Computer Science',
+		location: 'College Park / Adelphi, MD',
+		status: 'Completed',
+		icon: terpIcon,
+		body: 'Built a foundation across object-oriented design, data structures, systems programming, and compiler construction.',
+		focus: ['Java', 'Ruby', 'OCaml', 'C', 'Python'],
+	},
+];
+
+const academicBuilds = [
+	'Blackjack and Battleship game implementations',
+	'Java reservation system',
+	'Full compiler implementation',
+	'Object-oriented and systems programming coursework',
+];
+---
+
+<Panel title="Education" eyebrow="Academy.Log" class="education-panel" id="education">
+	<p slot="intro" class="intro">Formal training, practical builds, and one long-running upgrade path.</p>
+	<div class="education-layout">
+		<div class="degree-stack" aria-label="Education history">
+			{
+				education.map((entry, index) => (
+					<article class="degree-record" style={`--record-index: ${index}`}>
+						<div class="record-icon" aria-hidden="true">
+							<img src={entry.icon} alt="" width="52" height="52" loading="lazy" />
+						</div>
+						<div class="record-main">
+							<div class="record-topline">
+								<span>{entry.period}</span>
+								<span class="status">[{entry.status}]</span>
+							</div>
+							<h3>{entry.degree}</h3>
+							<p class="school">{entry.school} / {entry.location}</p>
+							<p class="record-body">{entry.body}</p>
+							<ul class="focus-list" aria-label={`${entry.school} focus areas`}>
+								{entry.focus.map((item) => (
+									<li>{item}</li>
+								))}
+							</ul>
+						</div>
+					</article>
+				))
+			}
+		</div>
+
+		<aside class="education-console" aria-label="Academic project log">
+			<div class="console-heading">
+				<span class="console-icon-wrap" style="--pixel-icon-size: 26px; color: var(--cyan);">
+					<PixelIcon src={notebookIcon} />
+				</span>
+				<strong>&gt; Coursework.Builds</strong>
+			</div>
+			<ul>
+				{
+					academicBuilds.map((build) => (
+						<li>{build}</li>
+					))
+				}
+			</ul>
+			<p class="track">
+				<PixelIcon src={gitBranchIcon} />
+				Software engineering track active
+			</p>
+		</aside>
+	</div>
+
+	<ul class="signal-bars" aria-hidden="true">
+		<li style="--bar-height: 96px"></li>
+		<li style="--bar-height: 132px"></li>
+		<li style="--bar-height: 74px"></li>
+		<li style="--bar-height: 158px"></li>
+		<li style="--bar-height: 112px"></li>
+		<li style="--bar-height: 188px"></li>
+		<li style="--bar-height: 84px"></li>
+	</ul>
+</Panel>
+
+<style>
+	.education-panel {
+		grid-column: 1 / -1;
+	}
+
+	.education-layout,
+	.signal-bars {
+		position: relative;
+		z-index: 1;
+	}
+
+	.education-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+		gap: clamp(16px, 2vw, 30px);
+		align-items: stretch;
+	}
+
+	.degree-stack {
+		display: grid;
+		gap: 14px;
+	}
+
+	.degree-record {
+		display: grid;
+		grid-template-columns: 72px minmax(0, 1fr);
+		gap: 16px;
+		min-height: 186px;
+		padding: clamp(16px, 1.5vw, 24px);
+		border: 1px solid rgba(148, 183, 220, 0.24);
+		border-radius: 6px;
+		background:
+			linear-gradient(135deg, rgba(7, 15, 28, 0.86), rgba(3, 9, 17, 0.94)),
+			radial-gradient(circle at 100% 0, rgba(95, 230, 255, 0.1), transparent 15rem);
+		clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+		animation: record-reveal 600ms calc(var(--record-index) * 110ms) ease both;
+		transition:
+			border-color 160ms ease,
+			box-shadow 160ms ease,
+			transform 160ms ease;
+	}
+
+	.degree-record:hover {
+		border-color: rgba(94, 255, 181, 0.5);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+		transform: translateY(-3px);
+	}
+
+	.record-icon {
+		display: grid;
+		place-items: center;
+		width: 64px;
+		aspect-ratio: 1;
+		border: 1px solid rgba(148, 183, 220, 0.28);
+		border-radius: 5px;
+		background:
+			linear-gradient(180deg, rgba(8, 16, 30, 0.96), rgba(3, 8, 16, 0.94)),
+			radial-gradient(circle at 50% 0, rgba(95, 230, 255, 0.08), transparent 72%);
+		box-shadow:
+			inset 0 0 18px rgba(95, 230, 255, 0.04),
+			0 0 18px rgba(94, 255, 181, 0.06);
+	}
+
+	.record-icon img {
+		display: block;
+		width: 52px;
+		max-height: 52px;
+		height: auto;
+		filter: drop-shadow(0 0 12px rgba(94, 255, 181, 0.22));
+		image-rendering: pixelated;
+	}
+
+	.record-topline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 10px;
+		color: var(--faint);
+		font-size: clamp(0.58rem, 0.64vw, 0.72rem);
+		text-transform: uppercase;
+	}
+
+	.status {
+		color: var(--yellow);
+		font-weight: 800;
+	}
+
+	h3 {
+		margin: 0;
+		color: var(--green);
+		font-size: clamp(0.9rem, 1vw, 1.18rem);
+		line-height: 1.18;
+		text-transform: uppercase;
+	}
+
+	.school {
+		margin: 9px 0 0;
+		color: var(--purple);
+		font-size: clamp(0.64rem, 0.7vw, 0.8rem);
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	.record-body {
+		max-width: 740px;
+		margin: 12px 0 0;
+		color: #c5d3e1;
+		font-size: clamp(0.68rem, 0.74vw, 0.84rem);
+		line-height: 1.6;
+	}
+
+	.focus-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 7px;
+		padding: 0;
+		margin: 16px 0 0;
+		list-style: none;
+	}
+
+	.focus-list li {
+		padding: 5px 7px;
+		border: 1px solid rgba(95, 230, 255, 0.26);
+		border-radius: 3px;
+		color: #d7e5f2;
+		background: rgba(95, 230, 255, 0.055);
+		font-size: clamp(0.56rem, 0.62vw, 0.7rem);
+		text-transform: uppercase;
+	}
+
+	.education-console {
+		display: grid;
+		align-content: start;
+		gap: 16px;
+		padding: clamp(16px, 1.5vw, 22px);
+		border: 1px dashed rgba(148, 183, 220, 0.3);
+		border-radius: 6px;
+		background:
+			linear-gradient(180deg, rgba(5, 12, 22, 0.78), rgba(3, 8, 15, 0.76)),
+			radial-gradient(circle at 12% 100%, rgba(182, 140, 255, 0.12), transparent 12rem);
+	}
+
+	.console-heading {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		color: var(--green);
+		font-size: clamp(0.62rem, 0.68vw, 0.76rem);
+		text-transform: uppercase;
+	}
+
+	.console-icon-wrap {
+		line-height: 0;
+	}
+
+	.education-console ul {
+		display: grid;
+		gap: 11px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.education-console li {
+		color: #c6d3e0;
+		font-size: clamp(0.64rem, 0.7vw, 0.8rem);
+		line-height: 1.5;
+	}
+
+	.education-console li::before {
+		color: var(--cyan);
+		content: "run: ";
+	}
+
+	.track {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin: 4px 0 0;
+		padding-top: 16px;
+		border-top: 1px solid rgba(148, 183, 220, 0.18);
+		color: var(--faint);
+		font-size: clamp(0.6rem, 0.66vw, 0.76rem);
+		text-transform: uppercase;
+	}
+
+	.track :global(.pixel-icon) {
+		--pixel-icon-size: 22px;
+		color: var(--green);
+	}
+
+	.signal-bars {
+		position: absolute;
+		right: clamp(18px, 2.4vw, 42px);
+		bottom: 0;
+		display: flex;
+		align-items: flex-end;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		pointer-events: none;
+		opacity: 0.28;
+	}
+
+	.signal-bars li {
+		width: 4px;
+		height: var(--bar-height);
+		background: linear-gradient(180deg, rgba(94, 255, 181, 0.16), rgba(95, 230, 255, 0.82));
+		box-shadow: 0 0 14px rgba(95, 230, 255, 0.2);
+		transform-origin: bottom;
+		animation: signal-pulse 2400ms ease-in-out infinite alternate;
+		animation-delay: calc(var(--bar-height) * -7ms);
+	}
+
+	@media (max-width: 1180px) {
+		.education-panel {
+			grid-column: auto;
+		}
+
+		.education-layout {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.degree-record {
+			grid-template-columns: 1fr;
+		}
+
+		.signal-bars {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.degree-record,
+		.signal-bars li {
+			animation: none;
+		}
+
+		.degree-record:hover {
+			transform: none;
+		}
+	}
+
+	@keyframes record-reveal {
+		from {
+			opacity: 0;
+			transform: translateY(14px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes signal-pulse {
+		from {
+			opacity: 0.32;
+			transform: scaleY(0.64);
+		}
+
+		to {
+			opacity: 0.78;
+			transform: scaleY(1);
+		}
+	}
+</style>
