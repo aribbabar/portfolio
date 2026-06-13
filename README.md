@@ -19,7 +19,28 @@ npm run dev
 npm run check
 npm run build
 npm run preview
+npm run preview:pages
+npm run deploy:pages
 ```
+
+## Cloudflare Deployment
+
+Deploy this site as a Cloudflare Pages project, not as a Worker.
+
+Recommended Pages settings:
+
+- Framework preset: `Astro`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Root directory: repository root
+
+For manual deploys, use:
+
+```sh
+npm run deploy:pages
+```
+
+Avoid `wrangler deploy` for this repo. The site is static, and deploying it as a Worker can make Wrangler try to provision an unnecessary `SESSION` KV namespace, which fails if Cloudflare already has a namespace with the generated title.
 
 ## Stack
 
