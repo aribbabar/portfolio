@@ -80,7 +80,7 @@ const inputId = `terminal-input-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 		},
 		'~/contact': {
 			dirs: [],
-			files: ['email.txt', 'github.url', 'linkedin.url'],
+			files: ['github.url', 'linkedin.url'],
 		},
 		'~/secrets': {
 			dirs: [],
@@ -103,9 +103,8 @@ const inputId = `terminal-input-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 		'~/skills/backend.ts': ['APIs, databases, auth flows, integrations, deployment.'],
 		'~/skills/ai-tools.ts': ['LLM workflows, retrieval, agent tooling, automation.'],
 		'~/skills/debugging.ts': ['Breakpoints, traces, repros, and the occasional stare-off with logs.'],
-		'~/contact/email.txt': ['hello@arib.dev'],
-		'~/contact/github.url': ['https://github.com/aribfarooqui'],
-		'~/contact/linkedin.url': ['https://www.linkedin.com/'],
+		'~/contact/github.url': ['https://github.com/aribbabar'],
+		'~/contact/linkedin.url': ['https://www.linkedin.com/in/aribfarooqui/'],
 		'~/secrets/easter-egg.txt': ['You found the quiet folder. Try `easter-egg`.'],
 	};
 
@@ -340,7 +339,7 @@ const inputId = `terminal-input-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 			return [
 				{ text: 'Checking qualifications...' },
 				{ text: 'Overqualified.', className: 'ok' },
-				{ text: 'Opening best next step: email hello@arib.dev', className: 'accent' },
+				{ text: 'Opening best next step: linkedin.url', className: 'accent' },
 			];
 		}
 		if (lowerCommand === 'easter-egg') {
@@ -443,9 +442,8 @@ const inputId = `terminal-input-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 				return [{ text: 'portfolio static-site 1.0.0 astro/browser x86_64-ish' }];
 			case 'contact':
 				return [
-					{ text: 'Email: hello@arib.dev', className: 'accent' },
-					{ text: 'GitHub: https://github.com/aribfarooqui' },
-					{ text: 'LinkedIn: https://www.linkedin.com/' },
+					{ text: 'GitHub: https://github.com/aribbabar', className: 'accent' },
+					{ text: 'LinkedIn: https://www.linkedin.com/in/aribfarooqui/' },
 				];
 			case 'sudo':
 				return [{ text: 'sudo: nice try. Only `sudo hire-me` is allowed.', className: 'error' }];

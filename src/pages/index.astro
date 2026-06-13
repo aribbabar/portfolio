@@ -11,7 +11,6 @@ import PixelIcon from '../components/PixelIcon.astro';
 const externalLinkIcon = '/pixelarticons/external-link.svg';
 const heartIcon = '/pixelarticons/heart.svg';
 const linkIcon = '/pixelarticons/link.svg';
-const mailIcon = '/pixelarticons/mail.svg';
 ---
 
 <Layout>
@@ -27,14 +26,16 @@ const mailIcon = '/pixelarticons/mail.svg';
 			<HireTerminal />
 			<footer class="site-footer" aria-label="Portfolio footer">
 				<div class="socials" aria-label="Social links">
-					<a href="https://github.com/aribfarooqui" aria-label="GitHub">
+					<a href="https://github.com/aribbabar" target="_blank" rel="noreferrer" aria-label="GitHub">
 						<PixelIcon src={externalLinkIcon} />
 					</a>
-					<a href="https://www.linkedin.com/" aria-label="LinkedIn">
+					<a
+						href="https://www.linkedin.com/in/aribfarooqui/"
+						target="_blank"
+						rel="noreferrer"
+						aria-label="LinkedIn"
+					>
 						<PixelIcon src={linkIcon} />
-					</a>
-					<a href="mailto:hello@arib.dev" aria-label="Email">
-						<PixelIcon src={mailIcon} />
 					</a>
 				</div>
 				<span class="built">Built with <PixelIcon src={heartIcon} class="footer-heart" /> and too much caffeine</span>
