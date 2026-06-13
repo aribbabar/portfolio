@@ -684,7 +684,7 @@ export default function TerminalWindowReact({
 			setAnimationComplete(true);
 			input.disabled = false;
 			input.removeAttribute('aria-disabled');
-			input.focus();
+			input.focus({ preventScroll: true });
 		};
 
 		if ('IntersectionObserver' in window) {
