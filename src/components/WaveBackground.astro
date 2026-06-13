@@ -27,6 +27,7 @@
 			return;
 		}
 
+		const drawingContext = context;
 		let width = 0;
 		let height = 0;
 		let dpr = 1;
@@ -108,7 +109,7 @@
 			canvas.height = Math.floor(height * dpr);
 			canvas.style.width = `${width}px`;
 			canvas.style.height = `${height}px`;
-			context.setTransform(dpr, 0, 0, dpr, 0, 0);
+			drawingContext.setTransform(dpr, 0, 0, dpr, 0, 0);
 			draw(reduce ? start + 5400 : performance.now());
 		};
 
@@ -235,25 +236,25 @@
 				}
 			}
 
-			context.save();
-			context.globalCompositeOperation = 'lighter';
-			context.strokeStyle = 'rgba(92, 139, 190, 0.13)';
-			context.lineWidth = 0.45;
-			context.stroke(connectors);
+			drawingContext.save();
+			drawingContext.globalCompositeOperation = 'lighter';
+			drawingContext.strokeStyle = 'rgba(92, 139, 190, 0.13)';
+			drawingContext.lineWidth = 0.45;
+			drawingContext.stroke(connectors);
 
 			for (let bucket = 0; bucket < bucketCount; bucket += 1) {
 				const x = ((bucket + 0.5) / bucketCount) * width;
 
-				context.fillStyle = colorFor(x, layer.pointAlpha * 0.22);
-				context.fill(dimDots[bucket]);
-				context.fillStyle = colorFor(x, layer.pointAlpha * 0.4);
-				context.fill(midDots[bucket]);
-				context.fillStyle = colorFor(x, layer.pointAlpha * 0.62);
-				context.fill(brightDots[bucket]);
-				context.fillStyle = colorFor(x, layer.pointAlpha * 0.86);
-				context.fill(glowDots[bucket]);
+				drawingContext.fillStyle = colorFor(x, layer.pointAlpha * 0.22);
+				drawingContext.fill(dimDots[bucket]);
+				drawingContext.fillStyle = colorFor(x, layer.pointAlpha * 0.4);
+				drawingContext.fill(midDots[bucket]);
+				drawingContext.fillStyle = colorFor(x, layer.pointAlpha * 0.62);
+				drawingContext.fill(brightDots[bucket]);
+				drawingContext.fillStyle = colorFor(x, layer.pointAlpha * 0.86);
+				drawingContext.fill(glowDots[bucket]);
 			}
-			context.restore();
+			drawingContext.restore();
 		};
 
 		function draw(now: number) {
@@ -267,7 +268,7 @@
 				pointer.y += (pointer.targetY - pointer.y) * 0.045;
 			}
 
-			context.clearRect(0, 0, width, height);
+			drawingContext.clearRect(0, 0, width, height);
 
 			for (const layer of layers) {
 				drawLayer(layer, time);
