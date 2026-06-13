@@ -13,6 +13,30 @@
 	</head>
 	<body>
 		<slot />
+		<script is:inline>
+			document.documentElement.dataset.consoleEgg = 'armed';
+			console.log(
+				'%c> access granted: portfolio console',
+				'color: #030811; background: #5effb5; font-weight: 800; padding: 3px 6px;',
+			);
+			console.groupCollapsed(
+				'%cconsole side quest',
+				'color: #5effb5; font-weight: 800; font-size: 13px;',
+			);
+			console.log(
+				'%cYou opened DevTools. That means you are either debugging, hiring, or avoiding a task. Respect.',
+				'color: #eff7ff;',
+			);
+			console.log(
+				'%cTry this on the page terminal: easter-egg',
+				'color: #5fe6ff; font-weight: 700;',
+			);
+			console.log(
+				'%cSecret status: the CSS is pretending it had a plan all along.',
+				'color: #ffe35e;',
+			);
+			console.groupEnd();
+		</script>
 	</body>
 </html>
 
@@ -54,6 +78,7 @@
 
 	* {
 		box-sizing: border-box;
+		cursor: default;
 	}
 
 	button,

@@ -56,6 +56,36 @@ const helpLines = [
 		<span class="star-dot upsilon"></span>
 		<span class="star-dot phi"></span>
 		<span class="star-dot chi"></span>
+		<span class="star-dot psi"></span>
+		<span class="star-dot omega"></span>
+		<span class="star-dot nova"></span>
+		<span class="star-dot quasar"></span>
+		<span class="star-dot pulsar"></span>
+		<span class="star-dot vega"></span>
+		<span class="star-dot rigel"></span>
+		<span class="star-dot sirius"></span>
+		<span class="star-dot orion"></span>
+		<span class="star-dot lyra"></span>
+		<span class="star-dot cygnus"></span>
+		<span class="star-dot deneb"></span>
+		<span class="star-dot atlas"></span>
+		<span class="star-dot mira"></span>
+		<span class="star-dot sol"></span>
+		<span class="star-dot polaris"></span>
+		<span class="star-dot altair"></span>
+		<span class="star-dot castor"></span>
+		<span class="star-dot pollux"></span>
+		<span class="star-dot capella"></span>
+		<span class="star-dot arcturus"></span>
+		<span class="star-dot betelgeuse"></span>
+		<span class="star-dot bellatrix"></span>
+		<span class="star-dot antares"></span>
+		<span class="star-dot achernar"></span>
+		<span class="star-dot alnair"></span>
+		<span class="star-dot hadar"></span>
+		<span class="star-dot acrux"></span>
+		<span class="star-dot spica"></span>
+		<span class="star-dot procyon"></span>
 	</div>
 	<WaveBackground />
 
@@ -79,7 +109,7 @@ const helpLines = [
 
 	<div class="tooltip" role="status" data-hero-tooltip>
 		<PixelIcon src={infoIcon} class="tooltip-icon" />
-		<p><strong>Tooltip:</strong> Loads too fast to read this message. Suffering from success.</p>
+		<p><strong>Tooltip:</strong> <span data-hero-tooltip-message>Loading a questionable tip...</span></p>
 		<button type="button" aria-label="Dismiss tooltip" data-hero-tooltip-dismiss>
 			<PixelIcon src={closeIcon} />
 		</button>
@@ -489,6 +519,242 @@ const helpLines = [
 		bottom: 9%;
 	}
 
+	.psi {
+		--star-alpha: 0.48;
+		--star-color: rgba(95, 230, 255, 0.76);
+		--star-glow: 6px;
+		--star-size: 1px;
+		left: 18%;
+		bottom: 20%;
+	}
+
+	.omega {
+		--star-alpha: 0.58;
+		--star-size: 2px;
+		top: 59%;
+		left: 55%;
+	}
+
+	.nova {
+		--star-alpha: 0.36;
+		--star-color: rgba(255, 227, 94, 0.72);
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 72%;
+		left: 58%;
+	}
+
+	.quasar {
+		--star-alpha: 0.64;
+		--star-size: 2px;
+		top: 32%;
+		left: 15%;
+	}
+
+	.pulsar {
+		--star-alpha: 0.5;
+		--star-color: rgba(239, 247, 255, 0.76);
+		--star-size: 2px;
+		top: 14%;
+		left: 43%;
+	}
+
+	.vega {
+		--star-alpha: 0.44;
+		--star-glow: 5px;
+		--star-size: 1px;
+		left: 31%;
+		bottom: 25%;
+	}
+
+	.rigel {
+		--star-alpha: 0.56;
+		--star-color: rgba(95, 230, 255, 0.76);
+		--star-size: 2px;
+		top: 48%;
+		left: 39%;
+	}
+
+	.sirius {
+		--star-alpha: 0.4;
+		--star-size: 1px;
+		top: 82%;
+		left: 57%;
+	}
+
+	.orion {
+		--star-alpha: 0.6;
+		--star-size: 2px;
+		top: 52%;
+		left: 13%;
+	}
+
+	.lyra {
+		--star-alpha: 0.46;
+		--star-color: rgba(239, 247, 255, 0.74);
+		--star-glow: 6px;
+		--star-size: 1px;
+		top: 14%;
+		left: 8%;
+	}
+
+	.cygnus {
+		--star-alpha: 0.52;
+		--star-color: rgba(95, 230, 255, 0.72);
+		--star-size: 2px;
+		top: 91%;
+		left: 30%;
+	}
+
+	.deneb {
+		--star-alpha: 0.34;
+		--star-glow: 5px;
+		--star-size: 1px;
+		left: 68%;
+		bottom: 13%;
+	}
+
+	.atlas {
+		--star-alpha: 0.5;
+		--star-color: rgba(255, 227, 94, 0.7);
+		--star-size: 1px;
+		top: 58%;
+		left: 27%;
+	}
+
+	.mira {
+		--star-alpha: 0.7;
+		--star-size: 2px;
+		top: 57%;
+		left: 65%;
+	}
+
+	.sol {
+		--star-alpha: 0.44;
+		--star-color: rgba(95, 230, 255, 0.72);
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 64.5%;
+		left: 70.8%;
+	}
+
+	.polaris {
+		--star-alpha: 0.6;
+		--star-size: 2px;
+		top: 58.3%;
+		left: 80.6%;
+	}
+
+	.altair {
+		--star-alpha: 0.5;
+		--star-color: rgba(239, 247, 255, 0.76);
+		--star-size: 1px;
+		top: 31.6%;
+		left: 26.1%;
+	}
+
+	.castor {
+		--star-alpha: 0.54;
+		--star-color: rgba(95, 230, 255, 0.74);
+		--star-size: 2px;
+		top: 38%;
+		left: 61.9%;
+	}
+
+	.pollux {
+		--star-alpha: 0.38;
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 69%;
+		left: 21.1%;
+	}
+
+	.capella {
+		--star-alpha: 0.58;
+		--star-color: rgba(255, 227, 94, 0.7);
+		--star-size: 2px;
+		top: 39.3%;
+		left: 20.4%;
+	}
+
+	.arcturus {
+		--star-alpha: 0.46;
+		--star-glow: 6px;
+		--star-size: 1px;
+		top: 73%;
+		left: 80.2%;
+	}
+
+	.betelgeuse {
+		--star-alpha: 0.42;
+		--star-color: rgba(239, 247, 255, 0.72);
+		--star-size: 1px;
+		top: 22.2%;
+		left: 50.1%;
+	}
+
+	.bellatrix {
+		--star-alpha: 0.56;
+		--star-size: 2px;
+		top: 52.8%;
+		left: 73.1%;
+	}
+
+	.antares {
+		--star-alpha: 0.34;
+		--star-color: rgba(255, 227, 94, 0.68);
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 86%;
+		left: 7.7%;
+	}
+
+	.achernar {
+		--star-alpha: 0.48;
+		--star-color: rgba(95, 230, 255, 0.7);
+		--star-size: 2px;
+		top: 71.7%;
+		left: 12.1%;
+	}
+
+	.alnair {
+		--star-alpha: 0.4;
+		--star-size: 1px;
+		top: 53.7%;
+		left: 47.8%;
+	}
+
+	.hadar {
+		--star-alpha: 0.52;
+		--star-color: rgba(239, 247, 255, 0.74);
+		--star-size: 2px;
+		top: 57%;
+		left: 35.8%;
+	}
+
+	.acrux {
+		--star-alpha: 0.36;
+		--star-glow: 5px;
+		--star-size: 1px;
+		top: 35.8%;
+		left: 41.4%;
+	}
+
+	.spica {
+		--star-alpha: 0.5;
+		--star-color: rgba(95, 230, 255, 0.72);
+		--star-size: 1px;
+		top: 85.7%;
+		left: 91.3%;
+	}
+
+	.procyon {
+		--star-alpha: 0.62;
+		--star-size: 2px;
+		top: 88.7%;
+		left: 19.9%;
+	}
+
 	.tooltip {
 		position: absolute;
 		right: clamp(28px, 4vw, 70px);
@@ -516,6 +782,8 @@ const helpLines = [
 
 	.tooltip p {
 		margin: 0;
+		line-height: 1.45;
+		overflow-wrap: anywhere;
 	}
 
 	.tooltip strong {
@@ -531,7 +799,6 @@ const helpLines = [
 		border: 0;
 		color: var(--text);
 		background: transparent;
-		cursor: pointer;
 	}
 
 	.tooltip button :global(.pixel-icon) {
@@ -697,7 +964,24 @@ const helpLines = [
 		.delta,
 		.eta,
 		.lambda,
-		.xi {
+		.xi,
+		.omega,
+		.nova,
+		.rigel,
+		.sirius,
+		.cygnus,
+		.deneb,
+		.mira,
+		.polaris,
+		.castor,
+		.arcturus,
+		.bellatrix,
+		.achernar,
+		.alnair,
+		.hadar,
+		.acrux,
+		.spica,
+		.procyon {
 			display: none;
 		}
 
@@ -729,6 +1013,43 @@ const helpLines = [
 </style>
 
 <script>
+	const tooltipMessages = [
+		'Dominating in League of Legends boils down to three fundamentals: last-hit for gold, master a small champion pool, and mute chat before tilt gets a vote.',
+		'Life tip: if the task takes two minutes, do it now. If it takes three weeks, rename it to phase two.',
+		'Life tip: drink water before debugging. Half of all production incidents are just dehydration wearing a hoodie.',
+		'Coding tip: write the error message you wish you had before future-you becomes the target audience.',
+		'Coding tip: if a function needs a paragraph to explain its boolean flag, the boolean flag is probably two functions in a trench coat.',
+		'Commit messages are tiny postcards from the crime scene. Make them useful.',
+		'The fastest code is the code you deleted, unless it was the billing check. Put that back.',
+		'Somewhere, a loading spinner believes in you.',
+		'Warning: this portfolio may contain traces of caffeine, pixels, and suspiciously confident CSS.',
+		'Random quote: the moon is just the sun running dark mode.',
+	];
+
+	const pickTooltipMessage = () => {
+		if (tooltipMessages.length === 1) {
+			return tooltipMessages[0];
+		}
+
+		const fallbackIndex = Math.floor(Math.random() * tooltipMessages.length);
+
+		try {
+			const previousIndex = Number.parseInt(localStorage.getItem('heroTooltipIndex') ?? '', 10);
+			const availableIndexes = tooltipMessages
+				.map((_, index) => index)
+				.filter((index) => index !== previousIndex);
+			const nextIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+
+			localStorage.setItem('heroTooltipIndex', String(nextIndex));
+
+			return tooltipMessages[nextIndex];
+		} catch {
+			return tooltipMessages[fallbackIndex];
+		}
+	};
+
+	document.querySelector('[data-hero-tooltip-message]')?.replaceChildren(pickTooltipMessage());
+
 	document.addEventListener('click', ({ target }) => {
 		if (!(target instanceof Element)) {
 			return;
