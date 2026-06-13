@@ -77,10 +77,12 @@ const helpLines = [
 		<TerminalWindow title="Terminal" lines={helpLines} />
 	</div>
 
-	<div class="tooltip" role="status">
+	<div class="tooltip" role="status" data-hero-tooltip>
 		<PixelIcon src={infoIcon} class="tooltip-icon" />
 		<p><strong>Tooltip:</strong> Loads too fast to read this message. Suffering from success.</p>
-		<button aria-label="Dismiss tooltip"><PixelIcon src={closeIcon} /></button>
+		<button type="button" aria-label="Dismiss tooltip" data-hero-tooltip-dismiss>
+			<PixelIcon src={closeIcon} />
+		</button>
 	</div>
 </section>
 
@@ -725,3 +727,19 @@ const helpLines = [
 		}
 	}
 </style>
+
+<script>
+	document.addEventListener('click', ({ target }) => {
+		if (!(target instanceof Element)) {
+			return;
+		}
+
+		const button = target.closest('[data-hero-tooltip-dismiss]');
+
+		if (!button) {
+			return;
+		}
+
+		button.closest('[data-hero-tooltip]')?.remove();
+	});
+</script>

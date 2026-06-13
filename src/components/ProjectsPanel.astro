@@ -1,10 +1,13 @@
 ---
 import Panel from './Panel.astro';
+import PixelIcon from './PixelIcon.astro';
 import alienIcon from '../assets/alien.svg?url';
 import lockIcon from '../assets/lock.svg?url';
 import brainIcon from '../assets/neon-brain.svg?url';
 import paletteIcon from '../assets/palette-and-brush.svg?url';
 import terminalIcon from '../assets/terminal.svg?url';
+
+const externalLinkIcon = '/pixelarticons/external-link.svg';
 
 const projects = [
 	{
@@ -14,20 +17,25 @@ const projects = [
 		title: 'Draw Rush',
 		description: 'Pictionary-style multiplayer game with real-time drawing and guessing chaos.',
 		icon: paletteIcon,
-		tags: ['Next.js', 'TypeScript', 'Socket.io', 'Tailwind'],
+		tags: ['React', 'Cloudflare', 'R2', 'Durable Objects'],
 		status: 'Building',
-		action: 'Playtest',
+		links: [],
 	},
 	{
 		id: '02',
 		state: 'Open Source',
 		stateClass: 'open',
-		title: 'Docs MCP',
+		title: 'LocalKit Docs',
 		description: 'Embedding-based MCP server for LLMs to search and understand documentation.',
 		icon: brainIcon,
 		tags: ['Python', 'FastAPI', 'ChromaDB', 'Docker'],
 		status: 'Active',
-		action: 'Code',
+		links: [
+			{
+				label: 'GitHub',
+				href: 'https://github.com/aribbabar/localkit-docs',
+			},
+		],
 	},
 	{
 		id: '03',
@@ -36,9 +44,18 @@ const projects = [
 		title: 'LocalKit',
 		description: 'Collection of privacy-first browser utilities for everyday use.',
 		icon: terminalIcon,
-		tags: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind'],
+		tags: ['TypeScript', 'Tailwind'],
 		status: 'Live',
-		action: 'Visit',
+		links: [
+			{
+				label: 'GitHub',
+				href: 'https://github.com/aribbabar/localkit.dev',
+			},
+			{
+				label: 'Website',
+				href: 'https://localkit.dev',
+			},
+		],
 	},
 	{
 		id: '04',
@@ -49,7 +66,7 @@ const projects = [
 		icon: lockIcon,
 		tags: ['Top Secret'],
 		status: 'Locked',
-		action: 'Unknown',
+		links: [],
 	},
 ];
 ---
@@ -74,7 +91,7 @@ const projects = [
 							decoding="async"
 						/>
 					</div>
-					<h3>{project.title} <span>...</span></h3>
+					<h3>{project.title}</h3>
 					<p>{project.description}</p>
 					<div class="tags">
 						{project.tags.map((tag) => (
@@ -83,7 +100,18 @@ const projects = [
 					</div>
 					<footer>
 						<span>Status: <strong>{project.status}</strong></span>
-						<span>{project.action}</span>
+						{
+							project.links.length > 0 && (
+								<div class="project-links" aria-label={`${project.title} links`}>
+									{project.links.map((link) => (
+										<a href={link.href} target="_blank" rel="noreferrer">
+											{link.label}
+											<PixelIcon src={externalLinkIcon} />
+										</a>
+									))}
+								</div>
+							)
+						}
 					</footer>
 				</article>
 			))
@@ -207,10 +235,6 @@ const projects = [
 		text-transform: uppercase;
 	}
 
-	h3 span {
-		color: var(--green);
-	}
-
 	.project-card p {
 		margin: 14px 0 0;
 		padding: 0 18px;
@@ -245,6 +269,40 @@ const projects = [
 
 	.project-card footer strong {
 		color: var(--green);
+	}
+
+	.project-links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+
+	.project-links a {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		color: #cdd8e6;
+		text-decoration: none;
+		transition:
+			color 160ms ease,
+			transform 160ms ease;
+	}
+
+	.project-links a:hover,
+	.project-links a:focus-visible {
+		color: var(--green);
+		transform: translateY(-1px);
+	}
+
+	.project-links a:focus-visible {
+		outline: 1px solid rgba(94, 255, 181, 0.72);
+		outline-offset: 4px;
+	}
+
+	.project-links :global(.pixel-icon) {
+		--pixel-icon-size: 13px;
 	}
 
 	.system-row {
