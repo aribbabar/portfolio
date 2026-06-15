@@ -184,7 +184,6 @@ const jsonLd = [
 
 	* {
 		box-sizing: border-box;
-		cursor: default;
 	}
 
 	button,
@@ -194,6 +193,37 @@ const jsonLd = [
 
 	a {
 		color: inherit;
+	}
+
+	button,
+	a,
+	[role='button'],
+	summary,
+	select {
+		cursor: pointer;
+	}
+
+	input,
+	textarea,
+	[contenteditable='true'] {
+		cursor: text;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		html,
+		body {
+			cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M5 3.5 17.5 12 11.8 13.2 9.2 19.5Z' fill='%235effb5' fill-opacity='0.9' stroke='%23030811' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M5 3.5 17.5 12 11.8 13.2 9.2 19.5Z' fill='none' stroke='%235fe6ff' stroke-opacity='0.42' stroke-width='0.7' stroke-linejoin='round'/%3E%3C/svg%3E") 5 4,
+				auto;
+		}
+
+		button,
+		a,
+		[role='button'],
+		summary,
+		select {
+			cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 19 10 15.1 10.9 17.2 16.2 13.8 17.5 11.7 12.2 8.8 15.1Z' fill='%235effb5' fill-opacity='0.92' stroke='%23030811' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M12 3 19 10 15.1 10.9 17.2 16.2 13.8 17.5 11.7 12.2 8.8 15.1Z' fill='none' stroke='%235fe6ff' stroke-opacity='0.42' stroke-width='0.7' stroke-linejoin='round'/%3E%3C/svg%3E") 12 4,
+				pointer;
+		}
 	}
 
 	::selection {
