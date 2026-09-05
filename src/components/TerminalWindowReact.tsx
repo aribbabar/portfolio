@@ -522,7 +522,6 @@ export default function TerminalWindowReact({
 	const [commandHistoryIndex, setCommandHistoryIndex] = useState(0);
 	const [caretIndex, setCaretIndex] = useState(0);
 	const [bootHidden, setBootHidden] = useState(false);
-	const [bootCommandText, setBootCommandText] = useState(command);
 	const [bootLineText, setBootLineText] = useState<string[] | null>(null);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [animationComplete, setAnimationComplete] = useState(!interactive);
@@ -640,63 +639,52 @@ export default function TerminalWindowReact({
 
 		let cancelled = false;
 		let observer: IntersectionObserver | null = null;
+		const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-		const typeText = async (value: string, onUpdate: (text: string) => void, delay = 24) => {
-			onUpdate('');
-			let next = '';
-			for (const character of value) {
-				if (cancelled) return;
-				next += character;
-				onUpdate(next);
-				await wait(delay);
-			}
-		};
-
-		const playBootAnimation = async () => {
-			if (animationStarted.current) return;
-			animationStarted.current = true;
-			setIsAnimating(true);
-			setAnimationComplete(false);
-			input.disabled = true;
-			input.setAttribute('aria-disabled', 'true');
-			setBootLineText(lines.map(() => ''));
-
-			await wait(240);
-			await typeText(command, setBootCommandText, 34);
-			await wait(140);
-
-			for (let index = 0; index < lines.length; index += 1) {
-				const text = bootPlainLines[index] ?? '';
-				await typeText(text, (next) => {
-					setBootLineText((current) => {
-						const nextLines = [...(current ?? lines.map(() => ''))];
-						nextLines[index] = next;
-						return nextLines;
-					});
-				}, 12);
-				await wait(95);
-			}
-
+		// Typing or focusing the terminal always takes precedence over decoration.
+		const finish = () => {
 			if (cancelled) return;
-
+			cancelled = true;
+			animationStarted.current = true;
+			observer?.disconnect();
 			setBootLineText(null);
 			setIsAnimating(false);
 			setAnimationComplete(true);
-			input.disabled = false;
-			input.removeAttribute('aria-disabled');
-			input.focus({ preventScroll: true });
+		};
+		const onMotionChange = () => {
+			if (motion.matches) finish();
+		};
+		const playBootAnimation = async () => {
+			if (animationStarted.current || cancelled) return;
+			animationStarted.current = true;
+			setIsAnimating(true);
+			setBootLineText(lines.map(() => ''));
+			// Reveal whole lines instead of re-rendering React for every character.
+			for (let index = 0; index < lines.length; index += 1) {
+				await wait(80);
+				if (cancelled) return;
+				setBootLineText((current) => {
+					const next = [...(current ?? [])];
+					next[index] = bootPlainLines[index] ?? '';
+					return next;
+				});
+			}
+			finish();
 		};
 
-		if ('IntersectionObserver' in window) {
-			observer = new IntersectionObserver(
-				(entries) => {
-					if (entries.some((entry) => entry.isIntersecting)) {
-						observer?.disconnect();
-						void playBootAnimation();
-					}
-				},
-				{ threshold: 0.42 },
-			);
+		terminal.addEventListener('pointerdown', finish);
+		terminal.addEventListener('focusin', finish);
+		terminal.addEventListener('keydown', finish);
+		motion.addEventListener('change', onMotionChange);
+		if (motion.matches || terminal.contains(document.activeElement)) {
+			finish();
+		} else if ('IntersectionObserver' in window) {
+			observer = new IntersectionObserver((entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					observer?.disconnect();
+					void playBootAnimation();
+				}
+			}, { threshold: 0.42 });
 			observer.observe(terminal);
 		} else {
 			void playBootAnimation();
@@ -705,6 +693,10 @@ export default function TerminalWindowReact({
 		return () => {
 			cancelled = true;
 			observer?.disconnect();
+			terminal.removeEventListener('pointerdown', finish);
+			terminal.removeEventListener('focusin', finish);
+			terminal.removeEventListener('keydown', finish);
+			motion.removeEventListener('change', onMotionChange);
 		};
 	}, [bootPlainLines, command, interactive, lines]);
 
@@ -744,7 +736,7 @@ export default function TerminalWindowReact({
 				{!bootHidden && (
 					<>
 						<p className="command" data-terminal-boot-command={interactive}>
-							arib@portfolio:~$ <span data-terminal-boot-command-text>{bootCommandText}</span>
+							arib@portfolio:~$ <span data-terminal-boot-command-text>{command}</span>
 						</p>
 						{lines.length > 0 && (
 							<div className="lines">

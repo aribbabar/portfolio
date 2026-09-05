@@ -12,14 +12,30 @@ interface Props {
 const { title, command = 'help', lines = [], wide = false, interactive = false } = Astro.props;
 ---
 
-<TerminalWindowReact
-	title={title}
-	command={command}
-	lines={lines}
-	wide={wide}
-	interactive={interactive}
-	client:load
-/>
+{
+	interactive ? (
+		<TerminalWindowReact
+			title={title}
+			command={command}
+			lines={lines}
+			wide={wide}
+			interactive
+			client:visible={{ rootMargin: '200px' }}
+		/>
+	) : (
+		<article class:list={['terminal', { wide }]}>
+			<header>
+				<span>&gt; {title}</span>
+				<div class="lights" aria-hidden="true"><i class="hot" /><i class="warm" /><i class="ok" /></div>
+			</header>
+			<div class="terminal-body">
+				<p class="command">arib@portfolio:~$ <span>{command}</span></p>
+				{lines.length > 0 && <div class="lines">{lines.map((line) => <p set:html={line} />)}</div>}
+				<p class="command prompt">arib@portfolio:~$ <span class="cursor" /></p>
+			</div>
+		</article>
+	)
+}
 
 <style is:global>
 	.terminal {
@@ -165,16 +181,6 @@ const { title, command = 'help', lines = [], wide = false, interactive = false }
 		box-shadow: 0 0 12px rgba(94, 255, 181, 0.22);
 		vertical-align: -0.18em;
 		animation: terminalCursorPulse 620ms ease-in-out infinite alternate;
-	}
-
-	.terminal.interactive[data-terminal-animating="true"] .terminal-form {
-		opacity: 0.42;
-		pointer-events: none;
-	}
-
-	.terminal.interactive[data-terminal-animating="true"] .terminal-block-cursor {
-		animation: none;
-		opacity: 0.25;
 	}
 
 	.terminal.interactive[data-terminal-animation-complete="true"] .terminal-form:focus-within .terminal-block-cursor {
