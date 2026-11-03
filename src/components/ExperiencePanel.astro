@@ -169,10 +169,15 @@ const sideQuests = [
 		grid-column: 1 / -1;
 	}
 
+	.side-quests,
 	.timeline {
 		--date-width: clamp(110px, 12vw, 160px);
 		--node-width: 24px;
 		--timeline-gap: 20px;
+		--role-width: 720px;
+	}
+
+	.timeline {
 		position: relative;
 		z-index: 1;
 		display: grid;
@@ -218,7 +223,7 @@ const sideQuests = [
 
 	article {
 		position: relative;
-		max-width: 720px;
+		max-width: var(--role-width);
 		padding: 15px 16px 16px;
 		border: 1px solid rgba(148, 183, 220, 0.2);
 		border-radius: 5px;
@@ -330,7 +335,7 @@ const sideQuests = [
 		justify-items: start;
 		gap: 10px;
 		width: 100%;
-		max-width: 920px;
+		max-width: calc(var(--date-width) + var(--node-width) + var(--timeline-gap) * 2 + var(--role-width));
 		margin: 0 0 clamp(24px, 2vw, 32px);
 		padding: 13px 18px 14px;
 		border: 1px dashed rgba(148, 183, 220, 0.26);
@@ -404,6 +409,7 @@ const sideQuests = [
 			display: none;
 		}
 
+		.side-quests,
 		.timeline {
 			--date-width: 78px;
 			--node-width: 18px;
