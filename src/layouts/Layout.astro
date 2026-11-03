@@ -109,6 +109,26 @@ const jsonLd = [
 	</head>
 	<body>
 		<slot />
+		<script>
+			// CSS loops should sleep just like the canvas when their panels leave view.
+			const motionPanels = document.querySelectorAll<HTMLElement>('.hero-panel, .education-panel, .experience-panel');
+			const visiblePanels = new Set<Element>();
+			if ('IntersectionObserver' in window) {
+				const observer = new IntersectionObserver((entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) visiblePanels.add(entry.target);
+						else visiblePanels.delete(entry.target);
+						entry.target.toggleAttribute('data-motion-paused', !entry.isIntersecting || document.hidden);
+					}
+				});
+				for (const panel of motionPanels) observer.observe(panel);
+				document.addEventListener('visibilitychange', () => {
+					for (const panel of motionPanels) {
+						panel.toggleAttribute('data-motion-paused', document.hidden || !visiblePanels.has(panel));
+					}
+				});
+			}
+		</script>
 		<script is:inline>
 			document.documentElement.dataset.consoleEgg = 'armed';
 			console.log(
@@ -228,6 +248,24 @@ const jsonLd = [
 
 	::selection {
 		background: rgba(94, 255, 181, 0.32);
+	}
+
+	.tech-chip {
+		transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.tech-chip:hover {
+			--chip-border: rgba(95, 230, 255, 0.64);
+			--chip-background: rgba(95, 230, 255, 0.12);
+			--chip-foreground: var(--text);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.tech-chip {
+			transition: none;
+		}
 	}
 
 	body::before {

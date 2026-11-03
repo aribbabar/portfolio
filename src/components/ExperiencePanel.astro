@@ -72,7 +72,7 @@ const sideQuests = [
 						<p>{role.body}</p>
 						<ul class="role-tags" aria-label={`${role.title} skills`}>
 							{role.tags.map((tag) => (
-								<li>{tag}</li>
+								<li class="tech-chip">{tag}</li>
 							))}
 						</ul>
 					</article>
@@ -100,12 +100,79 @@ const sideQuests = [
 	</ul>
 </Panel>
 
+<script>
+	const timeline = document.querySelector<HTMLOListElement>('.timeline');
+	const cards = [...document.querySelectorAll<HTMLElement>('.timeline article')];
+	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+	let revealObserver: IntersectionObserver | undefined;
+
+	if (!reducedMotion.matches && 'IntersectionObserver' in window) {
+		revealObserver = new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (!entry.isIntersecting) continue;
+				(entry.target as HTMLElement).dataset.reveal = 'visible';
+				revealObserver?.unobserve(entry.target);
+			}
+		}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+		for (const card of cards) {
+			card.dataset.reveal = 'pending';
+			revealObserver.observe(card);
+		}
+	}
+
+	if (timeline) {
+		const firstNode = timeline.querySelector<HTMLElement>('.node');
+		let glowFrame = 0;
+		let glowActive = false;
+		let pointerX = 0;
+		let pointerY = 0;
+		const resetGlow = () => {
+			cancelAnimationFrame(glowFrame);
+			glowFrame = 0;
+			if (glowActive) timeline.style.setProperty('--glow-opacity', '0');
+			glowActive = false;
+		};
+		timeline.addEventListener('pointermove', (event) => {
+			if (reducedMotion.matches || !finePointer.matches) return;
+			pointerX = event.clientX;
+			pointerY = event.clientY;
+			if (glowFrame) return;
+			glowFrame = requestAnimationFrame(() => {
+				glowFrame = 0;
+				const bounds = timeline.getBoundingClientRect();
+				if (!firstNode) return;
+				const nodeBounds = firstNode.getBoundingClientRect();
+				const distance = Math.abs(pointerX - (nodeBounds.left + nodeBounds.width / 2));
+				if (distance >= 120) {
+					resetGlow();
+					return;
+				}
+				glowActive = true;
+				timeline.style.setProperty('--pointer-y', `${pointerY - bounds.top - 5}px`);
+				timeline.style.setProperty('--glow-opacity', `${Math.max(0, 1 - distance / 120)}`);
+			});
+		});
+		timeline.addEventListener('pointerleave', resetGlow);
+		finePointer.addEventListener('change', resetGlow);
+		reducedMotion.addEventListener('change', () => {
+			resetGlow();
+			if (!reducedMotion.matches) return;
+			revealObserver?.disconnect();
+			for (const card of cards) delete card.dataset.reveal;
+		});
+	}
+</script>
+
 <style>
 	.experience-panel {
 		grid-column: 1 / -1;
 	}
 
 	.timeline {
+		--date-width: clamp(110px, 12vw, 160px);
+		--node-width: 24px;
+		--timeline-gap: 20px;
 		position: relative;
 		z-index: 1;
 		display: grid;
@@ -115,23 +182,35 @@ const sideQuests = [
 		list-style: none;
 	}
 
-	.timeline::before {
+	.timeline::before,
+	.timeline::after {
 		position: absolute;
 		top: 5px;
 		bottom: 7px;
-		left: min(38%, 180px);
+		left: calc(var(--date-width) + var(--timeline-gap) + var(--node-width) / 2);
 		content: "";
 		border-left: 1px dashed rgba(196, 224, 246, 0.42);
+		pointer-events: none;
+	}
+
+	.timeline::after {
+		border-color: var(--green);
+		box-shadow: 0 0 10px rgba(94, 255, 181, 0.4);
+		mask-image: linear-gradient(to bottom, transparent calc(var(--pointer-y, 0px) - 105px), black var(--pointer-y, 0px), transparent calc(var(--pointer-y, 0px) + 105px));
+		opacity: var(--glow-opacity, 0);
+		transition: opacity 180ms ease;
 	}
 
 	.timeline > li {
 		display: grid;
-		grid-template-columns: minmax(110px, 0.65fr) 24px 1fr;
+		grid-template-columns: var(--date-width) var(--node-width) minmax(0, 1fr);
 		align-items: start;
-		gap: 20px;
+		gap: var(--timeline-gap);
 	}
 
 	time {
+		justify-self: start;
+		text-align: left;
 		color: var(--muted);
 		font-size: clamp(0.64rem, 0.7vw, 0.78rem);
 		text-transform: uppercase;
@@ -147,11 +226,19 @@ const sideQuests = [
 			linear-gradient(180deg, rgba(7, 14, 25, 0.74), rgba(3, 9, 17, 0.72)),
 			radial-gradient(circle at 100% 0, rgba(94, 255, 181, 0.09), transparent 12rem);
 		clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
-		animation: role-reveal 560ms calc(var(--role-index) * 90ms) ease both;
 		transition:
 			border-color 160ms ease,
 			box-shadow 160ms ease,
 			transform 160ms ease;
+	}
+
+	article[data-reveal='pending'] {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+
+	article[data-reveal='visible'] {
+		animation: role-reveal 350ms calc(var(--role-index) * 70ms) ease backwards;
 	}
 
 	article:hover {
@@ -180,6 +267,7 @@ const sideQuests = [
 		z-index: 2;
 		display: grid;
 		place-items: center;
+		justify-self: center;
 		width: 14px;
 		aspect-ratio: 1;
 		margin-top: 2px;
@@ -227,10 +315,10 @@ const sideQuests = [
 
 	.role-tags li {
 		padding: 4px 6px;
-		border: 1px solid rgba(95, 230, 255, 0.26);
+		border: 1px solid var(--chip-border, rgba(95, 230, 255, 0.26));
 		border-radius: 3px;
-		color: #d7e5f2;
-		background: rgba(95, 230, 255, 0.055);
+		color: var(--chip-foreground, #d7e5f2);
+		background: var(--chip-background, rgba(95, 230, 255, 0.055));
 		font-size: clamp(0.55rem, 0.6vw, 0.68rem);
 		text-transform: uppercase;
 	}
@@ -239,16 +327,16 @@ const sideQuests = [
 		position: relative;
 		z-index: 1;
 		display: grid;
-		justify-items: center;
+		justify-items: start;
 		gap: 10px;
 		width: 100%;
 		max-width: 920px;
-		margin: 0 auto clamp(24px, 2vw, 32px);
+		margin: 0 0 clamp(24px, 2vw, 32px);
 		padding: 13px 18px 14px;
 		border: 1px dashed rgba(148, 183, 220, 0.26);
 		border-radius: 5px;
 		background: rgba(5, 12, 22, 0.58);
-		text-align: center;
+		text-align: left;
 	}
 
 	.side-quests strong {
@@ -316,13 +404,10 @@ const sideQuests = [
 			display: none;
 		}
 
-		.timeline::before {
-			left: 96px;
-		}
-
-		.timeline > li {
-			grid-template-columns: 78px 18px 1fr;
-			gap: 12px;
+		.timeline {
+			--date-width: 78px;
+			--node-width: 18px;
+			--timeline-gap: 12px;
 		}
 
 		article {
@@ -334,10 +419,25 @@ const sideQuests = [
 		}
 	}
 
+	:global(.experience-panel[data-motion-paused]) .experience-bars li {
+		animation-play-state: paused;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		article,
+		article[data-reveal],
 		.experience-bars li {
 			animation: none;
+			transition: none;
+		}
+
+		article[data-reveal='pending'] {
+			opacity: 1;
+			transform: none;
+		}
+
+		.timeline::after {
+			display: none;
 		}
 
 		article:hover {
@@ -348,7 +448,7 @@ const sideQuests = [
 	@keyframes role-reveal {
 		from {
 			opacity: 0;
-			transform: translateY(12px);
+			transform: translateY(6px);
 		}
 
 		to {

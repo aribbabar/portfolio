@@ -1,5 +1,6 @@
 ---
 import TerminalWindow from './TerminalWindow.astro';
+import PixelIcon from './PixelIcon.astro';
 
 const hireLines = [
 	'Checking qualifications...',
@@ -13,8 +14,17 @@ const hireLines = [
 ];
 ---
 
-<section id="contact" class="hire-panel" aria-label="Contact panel">
+<section id="contact" class="hire-panel" aria-label="Interactive terminal and contact links">
 	<TerminalWindow title="Easter_Egg.exe" command="sudo hire-me" lines={hireLines} wide interactive />
+	<div class="terminal-contact" aria-label="Get in touch">
+		<span>Get in touch</span>
+		<a href="https://www.linkedin.com/in/aribfarooqui/" target="_blank" rel="noreferrer">
+			LinkedIn <PixelIcon src="/pixelarticons/external-link.svg" />
+		</a>
+		<a href="https://github.com/aribbabar" target="_blank" rel="noreferrer">
+			GitHub <PixelIcon src="/pixelarticons/external-link.svg" />
+		</a>
+	</div>
 </section>
 
 <style>
@@ -37,6 +47,33 @@ const hireLines = [
 
 	.hire-panel :global(.terminal-body) {
 		height: 400px;
+	}
+
+	.terminal-contact {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 12px 20px;
+		padding: 16px 10px 2px;
+		color: var(--muted);
+		font-size: 12px;
+	}
+
+	.terminal-contact > span {
+		margin-right: auto;
+		text-transform: uppercase;
+	}
+
+	.terminal-contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--green);
+		text-underline-offset: 4px;
+	}
+
+	.terminal-contact :global(.pixel-icon) {
+		--pixel-icon-size: 14px;
 	}
 
 	@media (max-width: 1180px) {

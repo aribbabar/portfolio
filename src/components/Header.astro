@@ -3,7 +3,14 @@ import PixelIcon from './PixelIcon.astro';
 
 const terminalIcon = '/pixelarticons/terminal.svg';
 
-const links = ['Home', 'Projects', 'Skills', 'Education', 'Experience', 'Contact'];
+const links = [
+	{ label: 'Home', href: '#home' },
+	{ label: 'Projects', href: '#projects' },
+	{ label: 'Skills', href: '#skills' },
+	{ label: 'Education', href: '#education' },
+	{ label: 'Experience', href: '#experience' },
+	{ label: 'Terminal', href: '#contact' },
+];
 ---
 
 <header class="shell-header">
@@ -11,16 +18,52 @@ const links = ['Home', 'Projects', 'Skills', 'Education', 'Experience', 'Contact
 	<nav aria-label="Primary navigation">
 		{
 			links.map((link, index) => (
-				<a href={`#${link.toLowerCase()}`} class={index === 0 ? 'active' : undefined}>
-					[{String(index + 1).padStart(2, '0')}] {link}
+				<a href={link.href} class={index === 0 ? 'active' : undefined} aria-current={index === 0 ? 'location' : undefined}>
+					[{String(index + 1).padStart(2, '0')}] {link.label}
 				</a>
 			))
 		}
 	</nav>
-	<a class="prompt-button" href="#contact" aria-label="Open contact terminal">
+	<a class="prompt-button" href="#contact" aria-label="Open terminal">
 		<PixelIcon src={terminalIcon} />
 	</a>
 </header>
+
+<script>
+	const navigation = document.querySelector('.shell-header nav');
+	const entries = [...(navigation?.querySelectorAll<HTMLAnchorElement>('a') ?? [])]
+		.map((link) => ({ link, section: document.querySelector<HTMLElement>(link.hash) }))
+		.filter((entry) => entry.section !== null);
+	let activeHref = '';
+	let navigationFrame = 0;
+
+	const updateNavigation = () => {
+		navigationFrame = 0;
+		let current = entries[0];
+		for (const entry of entries) {
+			if (entry.section!.getBoundingClientRect().top <= window.innerHeight * 0.3) current = entry;
+		}
+		if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) {
+			current = entries.at(-1) ?? current;
+		}
+		if (!current || current.link.hash === activeHref) return;
+		activeHref = current.link.hash;
+		for (const { link } of entries) {
+			const active = link === current.link;
+			link.classList.toggle('active', active);
+			if (active) link.setAttribute('aria-current', 'location');
+			else link.removeAttribute('aria-current');
+		}
+	};
+	const scheduleNavigation = () => {
+		if (!navigationFrame) navigationFrame = requestAnimationFrame(updateNavigation);
+	};
+	window.addEventListener('scroll', scheduleNavigation, { passive: true });
+	window.addEventListener('resize', scheduleNavigation);
+	window.addEventListener('hashchange', scheduleNavigation);
+	window.addEventListener('load', scheduleNavigation, { once: true });
+	updateNavigation();
+</script>
 
 <style>
 	.shell-header {
@@ -62,6 +105,7 @@ const links = ['Home', 'Projects', 'Skills', 'Education', 'Experience', 'Contact
 	}
 
 	nav a:hover,
+	nav a:focus-visible,
 	nav a.active {
 		color: var(--green);
 		text-shadow: 0 0 18px rgba(94, 255, 181, 0.45);
@@ -89,6 +133,16 @@ const links = ['Home', 'Projects', 'Skills', 'Education', 'Experience', 'Contact
 	.prompt-button:hover {
 		background: rgba(94, 255, 181, 0.16);
 		transform: translateY(-1px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		nav a,
+		.prompt-button {
+			transition: none;
+		}
+		.prompt-button:hover {
+			transform: none;
+		}
 	}
 
 	@media (max-width: 900px) {

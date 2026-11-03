@@ -2,7 +2,18 @@
 import PixelIcon from './PixelIcon.astro';
 import TerminalWindow from './TerminalWindow.astro';
 import WaveBackground from './WaveBackground.astro';
-import asteroidSrc from '../assets/aesteroid.webp?url';
+import { Image } from 'astro:assets';
+import asteroidSrc from '../assets/aesteroid.webp';
+
+const asteroidImage = {
+	src: asteroidSrc,
+	alt: '',
+	width: 96,
+	widths: [48, 96, 192, 288],
+	sizes: '(max-width: 560px) 48px, 96px',
+	quality: 90,
+	loading: 'eager' as const,
+};
 
 const closeIcon = '/pixelarticons/close.svg';
 const infoIcon = '/pixelarticons/info-box.svg';
@@ -27,13 +38,13 @@ const helpLines = [
 
 <section id="home" class="hero-panel" aria-labelledby="hero-title">
 	<div class="stars" aria-hidden="true">
-		<img class="asteroid one" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid two" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid three" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid four" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid five" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid six" src={asteroidSrc} alt="" loading="eager" />
-		<img class="asteroid seven" src={asteroidSrc} alt="" loading="eager" />
+		<Image class="asteroid one" {...asteroidImage} fetchpriority="high" />
+		<Image class="asteroid two" {...asteroidImage} />
+		<Image class="asteroid three" {...asteroidImage} />
+		<Image class="asteroid four" {...asteroidImage} />
+		<Image class="asteroid five" {...asteroidImage} />
+		<Image class="asteroid six" {...asteroidImage} />
+		<Image class="asteroid seven" {...asteroidImage} />
 		<span class="star-dot alpha"></span>
 		<span class="star-dot beta"></span>
 		<span class="star-dot gamma"></span>
@@ -1003,6 +1014,11 @@ const helpLines = [
 			width: auto;
 			grid-template-columns: 28px 1fr 24px;
 		}
+	}
+
+	.hero-panel[data-motion-paused] .asteroid,
+	.hero-panel[data-motion-paused] h1 span {
+		animation-play-state: paused;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

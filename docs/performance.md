@@ -36,3 +36,47 @@ Initial resource inspection showed only the wave JavaScript chunk loading in the
 - Desktop and mobile screenshots were visually reviewed for layout and artwork.
 
 The browser harness and raw screenshots were temporary audit tools, not added as project dependencies. Recheck the deployed site under representative mobile network conditions before drawing conclusions about LCP or INP.
+
+## November 2, 2026 audit
+
+Audited the current production build locally at `http://127.0.0.1:4321/` with Lighthouse 13.6.0 and a separate headless Chrome 156 session. No deployment was performed. Lighthouse was installed outside the repository; application dependencies and lockfiles were unchanged.
+
+### Final measurements
+
+| Profile | Performance | FCP | LCP | Total blocking time | Layout shift |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Mobile | 97 | 0.8 s | 1.2 s | 200 ms | 0 |
+| Desktop | 100 | 0.2 s | 0.3 s | 0 ms | 0 |
+
+Mobile used Lighthouse's standard simulated mobile profile: 412 x 823, device scale factor 1.75, 4x CPU slowdown, 150 ms simulated RTT, and 1,638.4 Kbps throughput. Desktop used the built-in desktop preset. Each audit started at the home page with fresh browser storage, extensions disabled, and error reporting disabled. These are performance-category audits, not accessibility, SEO, or security audits.
+
+Two baseline mobile runs scored 94 and 100, with 1.4 s LCP and 0–300 ms blocking time. Intermediate optimized runs scored 100 and 98; the final corrected build scored 97. Desktop scored 100 both before and after. This variation does not support claiming a guaranteed score or CPU improvement. These are local lab observations, not production field Core Web Vitals or a measurement of INP. Lighthouse results can be affected by the test environment, as explained in the [Chrome documentation](https://developer.chrome.com/docs/devtools/lighthouse).
+
+### Findings and implemented improvements
+
+- **Oversized image delivery was the clearest opportunity.** The initial mobile audit estimated 84,029 bytes of avoidable image payload. The asteroid, brain, palette, and gamepad now use Astro-generated WebP variants with responsive `srcset` and high quality (90). Original assets remain available in `src/assets`; higher-resolution variants remain available for dense displays. These transforms run during the static build, following the [Astro assets API](https://v6.docs.astro.build/en/reference/modules/astro-assets/).
+- **Measured image bytes fell by 70.3%.** The four raster images downloaded in the mobile audit totaled 87,524 bytes before and 25,966 bytes after: 61,558 bytes saved. This is the sum of image resource bodies in Lighthouse's network log, excluding response headers. It is not a 70% reduction in the entire page. The final mobile run transferred 88,186 bytes across all recorded resources.
+- **Offscreen CSS animation now pauses.** A shared visibility observer pauses the hero asteroids and cursor, education signal bars, and experience bars when their panels leave view or the document becomes hidden. The existing canvas retains its separate offscreen, hidden-tab, reduced-motion, and slow-device safeguards. Browser checks verified that offscreen panels pause and the visible panel resumes. One-time entrance animations are unaffected.
+- **Timeline pointer work is limited to useful updates.** The first node reference is cached; once the pointer is outside the 120 px interaction band, the glow clears without updating its position on every move. Updates remain limited to one requestAnimationFrame callback per frame.
+- **Deferred React loading remains intact.** The final home-page audits fetched only the 4,861-byte wave script (2,660 bytes transferred). The React runtime and interactive terminal code were absent from initial script requests and remain deferred until the contact terminal approaches the viewport.
+- **Experience uses a shared left edge.** The section heading, Side Quests panel, and date text share the same left edge. A compact desktop date column keeps the timeline toward the left; phone layouts retain their narrower date column.
+
+### Remaining opportunities and limits
+
+The animated wave remains the largest attributed JavaScript CPU consumer during the loading audit. Its existing 24 FPS cap and safeguards are useful; this pass did not change its geometry or reduce the visible animation. The final audit still identifies a small image-delivery opportunity and the stylesheet as render-blocking. The stylesheet is approximately 52 KB uncompressed and 10 KB transferred; splitting it needs evidence of a practical gain before adding complexity.
+
+The largest remaining uncertainty is performance on actual mobile devices and production hosting. A real-device interaction profile and production field measurements would provide better evidence before changing the canvas further. No live-site CDN, cache-header, or geographic latency measurements were taken.
+
+### Verification and reproduction
+
+- Astro check: 0 errors, warnings, or hints.
+- Static production build: passed; image variants generated at build time.
+- Browser checks: date alignment and no horizontal overflow at desktop and 390 px; artwork loaded and visually inspected; animation pause/resume verified while navigating between home and experience.
+- Final Lighthouse reports completed without run warnings.
+
+Run the production build and `astro preview`, then use the [official Lighthouse CLI](https://github.com/GoogleChrome/lighthouse/blob/main/readme.md):
+
+```sh
+npx lighthouse@13.6.0 http://127.0.0.1:4321/ --chrome-flags="--headless --disable-extensions" --only-categories=performance --no-enable-error-reporting --output=json --output=html --output-path=./mobile-audit
+npx lighthouse@13.6.0 http://127.0.0.1:4321/ --chrome-flags="--headless --disable-extensions" --preset=desktop --only-categories=performance --no-enable-error-reporting --output=json --output=html --output-path=./desktop-audit
+```

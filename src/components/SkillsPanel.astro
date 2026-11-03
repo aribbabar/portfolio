@@ -1,10 +1,11 @@
 ---
 import Panel from './Panel.astro';
 import PixelIcon from './PixelIcon.astro';
+import { Image } from 'astro:assets';
 import cloudIcon from '../assets/cloud-green.svg?url';
 import codeBlockIcon from '../assets/code-block-green.svg?url';
 import cubeIcon from '../assets/cube-green.svg?url';
-import gamepadIcon from '../assets/gamepad.webp?url';
+import gamepadIcon from '../assets/gamepad.webp';
 import serverIcon from '../assets/server-green.svg?url';
 import starAssetIcon from '../assets/star-green.svg?url';
 import terminalIcon from '../assets/terminal-green.svg?url';
@@ -48,7 +49,7 @@ const groups = [
 <Panel title="Tech Arsenal" eyebrow="System.Skills" class="skills-panel" id="skills">
 	<p slot="intro" class="intro">The tools I use to build, break, and ship things.</p>
 	<button class="gamepad-mark" type="button" data-gamepad-shaker aria-label="Shake gamepad">
-		<img src={gamepadIcon} class="gamepad-icon" alt="" loading="lazy" />
+		<Image src={gamepadIcon} class="gamepad-icon" alt="" width={58} widths={[46, 58, 92, 116, 174]} sizes="(max-width: 560px) 46px, 58px" quality={90} loading="lazy" />
 	</button>
 	<div class="skills-grid">
 		{

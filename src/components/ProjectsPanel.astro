@@ -1,10 +1,11 @@
 ---
 import Panel from './Panel.astro';
 import PixelIcon from './PixelIcon.astro';
+import { Image } from 'astro:assets';
 import alienIcon from '../assets/alien.svg?url';
 import lockIcon from '../assets/lock.svg?url';
-import brainIcon from '../assets/neon-brain.webp?url';
-import paletteIcon from '../assets/palette-and-brush.webp?url';
+import brainIcon from '../assets/neon-brain.webp';
+import paletteIcon from '../assets/palette-and-brush.webp';
 import terminalIcon from '../assets/terminal.svg?url';
 
 const externalLinkIcon = '/pixelarticons/external-link.svg';
@@ -82,20 +83,17 @@ const projects = [
 						<span class:list={['badge', project.stateClass]}>{project.state}</span>
 					</div>
 					<div class="project-icon" aria-hidden="true">
-						<img
-							src={project.icon}
-							alt=""
-							width="86"
-							height="82"
-							loading="lazy"
-							decoding="async"
-						/>
+						{typeof project.icon === 'string' ? (
+							<img src={project.icon} alt="" width="86" height="82" loading="lazy" decoding="async" />
+						) : (
+							<Image src={project.icon} alt="" width={86} height={82} widths={[86, 172, 258]} sizes="86px" fit="contain" quality={90} loading="lazy" />
+						)}
 					</div>
 					<h3>{project.title}</h3>
 					<p>{project.description}</p>
 					<div class="tags">
 						{project.tags.map((tag) => (
-							<span>{tag}</span>
+							<span class="tech-chip">{tag}</span>
 						))}
 					</div>
 					<footer>
@@ -252,10 +250,10 @@ const projects = [
 
 	.tags span {
 		padding: 4px 6px;
-		border: 1px solid rgba(148, 183, 220, 0.28);
+		border: 1px solid var(--chip-border, rgba(148, 183, 220, 0.28));
 		border-radius: 3px;
-		color: #cdd8e6;
-		background: rgba(255, 255, 255, 0.035);
+		color: var(--chip-foreground, #cdd8e6);
+		background: var(--chip-background, rgba(255, 255, 255, 0.035));
 		font-size: clamp(0.56rem, 0.62vw, 0.68rem);
 	}
 
