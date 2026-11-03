@@ -28,17 +28,23 @@ const linkIcon = '/pixelarticons/link.svg';
 			<HireTerminal />
 			<footer class="site-footer" aria-label="Portfolio footer">
 				<div class="socials" aria-label="Social links">
-					<a href="https://github.com/aribbabar" target="_blank" rel="noreferrer" aria-label="GitHub">
-						<PixelIcon src={externalLinkIcon} />
-					</a>
-					<a
-						href="https://www.linkedin.com/in/aribfarooqui/"
-						target="_blank"
-						rel="noreferrer"
-						aria-label="LinkedIn"
-					>
-						<PixelIcon src={linkIcon} />
-					</a>
+					<span class="social-link">
+						<a href="https://github.com/aribbabar" target="_blank" rel="noreferrer" aria-label="GitHub">
+							<PixelIcon src={externalLinkIcon} />
+						</a>
+						<span class="social-tooltip" aria-hidden="true">&gt; GITHUB_</span>
+					</span>
+					<span class="social-link">
+						<a
+							href="https://www.linkedin.com/in/aribfarooqui/"
+							target="_blank"
+							rel="noreferrer"
+							aria-label="LinkedIn"
+						>
+							<PixelIcon src={linkIcon} />
+						</a>
+						<span class="social-tooltip" aria-hidden="true">&gt; LINKEDIN_</span>
+					</span>
 				</div>
 				<span class="built">Built with <PixelIcon src={heartIcon} class="footer-heart" /> and too much caffeine</span>
 				<span>© 2026 Arib Farooqui. All rights reserved.</span>
@@ -46,6 +52,23 @@ const linkIcon = '/pixelarticons/link.svg';
 		</section>
 	</main>
 </Layout>
+
+<script>
+	const socialLinks = document.querySelectorAll<HTMLElement>('.social-link');
+
+	for (const link of socialLinks) {
+		const resetTooltip = () => link.removeAttribute('data-tooltip-dismissed');
+		link.addEventListener('pointerenter', resetTooltip);
+		link.addEventListener('focusin', resetTooltip);
+	}
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Escape') return;
+		for (const link of socialLinks) {
+			link.setAttribute('data-tooltip-dismissed', '');
+		}
+	});
+</script>
 
 <style>
 	.portfolio-shell {
@@ -102,6 +125,44 @@ const linkIcon = '/pixelarticons/link.svg';
 		gap: 16px;
 	}
 
+	.social-link {
+		position: relative;
+	}
+
+	.social-tooltip {
+		position: absolute;
+		z-index: 2;
+		bottom: calc(100% + 10px);
+		left: 50%;
+		width: max-content;
+		padding: 6px 11px;
+		border: 1px solid var(--green);
+		background: var(--bg);
+		color: var(--green);
+		box-shadow: 3px 3px 0 var(--green-soft);
+		font-size: 12px;
+		line-height: 1.6;
+		letter-spacing: 0.06em;
+		transform: translateX(-50%);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 120ms ease, visibility 120ms ease;
+	}
+
+	.social-tooltip::after {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		left: 0;
+		height: 11px;
+		content: '';
+	}
+
+	.social-link:not([data-tooltip-dismissed]):is(:hover, :focus-within) .social-tooltip {
+		opacity: 1;
+		visibility: visible;
+	}
+
 	.socials a {
 		display: grid;
 		place-items: center;
@@ -114,7 +175,7 @@ const linkIcon = '/pixelarticons/link.svg';
 			transform 160ms ease;
 	}
 
-	.socials a:hover {
+	.social-link:is(:hover, :focus-within) a {
 		color: var(--green);
 		transform: translateY(-1px);
 	}
@@ -132,6 +193,19 @@ const linkIcon = '/pixelarticons/link.svg';
 
 	.built :global(.footer-heart) {
 		color: var(--green);
+	}
+
+	@media (pointer: coarse) {
+		.socials a {
+			width: 44px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.social-tooltip,
+		.socials a {
+			transition: none;
+		}
 	}
 
 	@media (max-width: 1180px) {
