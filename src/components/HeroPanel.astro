@@ -28,7 +28,7 @@ const helpLines = [
 	'<span class="cmd">tree</span> - show the tiny filesystem',
 	'<span class="cmd">echo &lt;text&gt;</span> - print text back',
 	'<span class="cmd">grep &lt;text&gt; &lt;file&gt;</span> - search a readable file',
-	'<span class="cmd">contact</span> - get in touch',
+	'<span class="cmd">contact</span> - show contact links',
 	'<span class="cmd">sudo hire-me</span> - run the important command',
 	'<span class="cmd">mkdir / touch / rm</span> - try static-site file ops',
 	'<span class="cmd">easter-egg</span> - ???',
@@ -122,16 +122,18 @@ const helpLines = [
 		</div>
 	</div>
 
-	<div class="terminal-wrap">
-		<TerminalWindow title="Terminal" lines={helpLines} />
-	</div>
+	<div class="hero-console">
+		<div class="terminal-wrap">
+			<TerminalWindow title="Terminal" lines={helpLines} />
+		</div>
 
-	<div class="tooltip" role="status" data-hero-tooltip>
-		<PixelIcon src={infoIcon} class="tooltip-icon" />
-		<p><strong>Tooltip:</strong> <span data-hero-tooltip-message>Loading a questionable tip...</span></p>
-		<button type="button" aria-label="Dismiss tooltip" data-hero-tooltip-dismiss>
-			<PixelIcon src={closeIcon} />
-		</button>
+		<div class="tooltip" role="status" data-hero-tooltip>
+			<PixelIcon src={infoIcon} class="tooltip-icon" />
+			<p><strong>Tooltip:</strong> <span data-hero-tooltip-message>Loading a questionable tip...</span></p>
+			<button type="button" aria-label="Dismiss tooltip" data-hero-tooltip-dismiss>
+				<PixelIcon src={closeIcon} />
+			</button>
+		</div>
 	</div>
 </section>
 
@@ -139,11 +141,11 @@ const helpLines = [
 	.hero-panel {
 		position: relative;
 		display: grid;
-		grid-template-columns: minmax(360px, 0.86fr) minmax(390px, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		align-items: center;
 		gap: clamp(24px, 3.4vw, 58px);
 		min-height: 0;
-		padding: clamp(30px, 4vw, 62px) clamp(28px, 4vw, 68px) 70px;
+		padding: clamp(30px, 4vw, 62px) var(--section-gutter);
 		overflow: hidden;
 	}
 
@@ -163,8 +165,7 @@ const helpLines = [
 	}
 
 	.hero-copy,
-	.terminal-wrap,
-	.tooltip {
+	.hero-console {
 		position: relative;
 		z-index: 3;
 	}
@@ -262,8 +263,16 @@ const helpLines = [
 		transform: translateY(-2px);
 	}
 
-	.terminal-wrap {
+	.hero-console {
+		display: grid;
+		gap: 12px;
+		width: 100%;
+		min-width: 0;
 		max-width: 560px;
+		justify-self: end;
+	}
+
+	.terminal-wrap {
 		animation: terminalIn 860ms 120ms ease both;
 	}
 
@@ -775,14 +784,10 @@ const helpLines = [
 	}
 
 	.tooltip {
-		position: absolute;
-		right: clamp(28px, 4vw, 70px);
-		bottom: 16px;
 		display: grid;
-		grid-template-columns: 32px 1fr 24px;
+		grid-template-columns: 32px minmax(0, 1fr) 24px;
 		align-items: center;
 		gap: 12px;
-		width: min(560px, calc(100% - 56px));
 		padding: 11px 14px;
 		border: 1px solid rgba(148, 183, 220, 0.32);
 		border-radius: 5px;
@@ -949,22 +954,17 @@ const helpLines = [
 
 	@media (max-width: 850px) {
 		.hero-panel {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 			align-content: center;
 			min-height: auto;
-			padding-bottom: 82px;
 		}
 
-		.terminal-wrap {
-			max-width: 620px;
+		.hero-console {
+			max-width: none;
 		}
 	}
 
 	@media (max-width: 560px) {
-		.hero-panel {
-			padding: 32px 18px 92px;
-		}
-
 		.one {
 			--scale: 0.46;
 			top: 4%;
@@ -1009,10 +1009,7 @@ const helpLines = [
 		}
 
 		.tooltip {
-			right: 14px;
-			left: 14px;
-			width: auto;
-			grid-template-columns: 28px 1fr 24px;
+			grid-template-columns: 28px minmax(0, 1fr) 24px;
 		}
 	}
 

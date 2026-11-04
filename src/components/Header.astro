@@ -9,7 +9,6 @@ const links = [
 	{ label: 'Skills', href: '#skills' },
 	{ label: 'Education', href: '#education' },
 	{ label: 'Experience', href: '#experience' },
-	{ label: 'Terminal', href: '#contact' },
 ];
 ---
 
@@ -30,8 +29,7 @@ const links = [
 </header>
 
 <script>
-	const navigation = document.querySelector('.shell-header nav');
-	const entries = [...(navigation?.querySelectorAll<HTMLAnchorElement>('a') ?? [])]
+	const entries = [...document.querySelectorAll<HTMLAnchorElement>('.shell-header nav a, .shell-header .prompt-button')]
 		.map((link) => ({ link, section: document.querySelector<HTMLElement>(link.hash) }))
 		.filter((entry) => entry.section !== null);
 	let activeHref = '';
@@ -68,11 +66,11 @@ const links = [
 <style>
 	.shell-header {
 		display: grid;
-		grid-template-columns: 250px 1fr 42px;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 		align-items: center;
 		gap: 20px;
 		min-width: 0;
-		padding: 0 30px;
+		padding: 0 var(--section-gutter);
 		border-bottom: 1px solid rgba(148, 183, 220, 0.18);
 		background: linear-gradient(180deg, rgba(5, 12, 23, 0.92), rgba(3, 9, 18, 0.72));
 	}
@@ -82,6 +80,7 @@ const links = [
 	}
 
 	.brand {
+		justify-self: start;
 		color: var(--green);
 		font-weight: 800;
 		font-size: clamp(0.78rem, 0.9vw, 0.95rem);
@@ -96,9 +95,11 @@ const links = [
 	}
 
 	nav a {
+		flex: none;
 		color: var(--text);
 		font-size: clamp(0.62rem, 0.68vw, 0.76rem);
 		text-transform: uppercase;
+		white-space: nowrap;
 		transition:
 			color 160ms ease,
 			text-shadow 160ms ease;
@@ -112,6 +113,7 @@ const links = [
 	}
 
 	.prompt-button {
+		justify-self: end;
 		display: grid;
 		place-items: center;
 		width: 40px;
@@ -130,8 +132,12 @@ const links = [
 		--pixel-icon-size: 24px;
 	}
 
-	.prompt-button:hover {
+	.prompt-button:hover,
+	.prompt-button[aria-current='location'] {
 		background: rgba(94, 255, 181, 0.16);
+	}
+
+	.prompt-button:hover {
 		transform: translateY(-1px);
 	}
 
@@ -148,13 +154,13 @@ const links = [
 	@media (max-width: 900px) {
 		.shell-header {
 			grid-template-columns: 1fr 42px;
-			padding: 18px;
+			padding: 18px var(--section-gutter);
 		}
 
 		nav {
 			grid-column: 1 / -1;
 			grid-row: 2;
-			justify-content: flex-start;
+			justify-content: safe center;
 			overflow-x: auto;
 			padding-bottom: 2px;
 		}

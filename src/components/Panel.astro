@@ -22,7 +22,7 @@ const { title, eyebrow, class: className = '', id } = Astro.props;
 	.panel {
 		position: relative;
 		min-width: 0;
-		padding: clamp(22px, 2.2vw, 42px);
+		padding: clamp(22px, 2.2vw, 42px) var(--section-gutter);
 		border: 1px solid var(--line);
 		border-radius: var(--radius);
 		background:
@@ -73,11 +73,5 @@ const { title, eyebrow, class: className = '', id } = Astro.props;
 		margin-top: 12px;
 		color: var(--muted);
 		font-size: clamp(0.68rem, 0.72vw, 0.82rem);
-	}
-
-	@media (max-width: 680px) {
-		.panel {
-			padding: 22px 18px;
-		}
 	}
 </style>

@@ -175,7 +175,12 @@ const jsonLd = [
 		--orange: #ff9d52;
 		--red: #ff655c;
 		--radius: 8px;
+		--section-gutter: clamp(22px, 2.2vw, 42px);
 		--mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	}
+
+	@media (max-width: 680px) {
+		:root { --section-gutter: 18px; }
 	}
 
 	html,

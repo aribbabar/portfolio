@@ -46,10 +46,8 @@ const notes = [
 	.field-notes {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		max-width: 420px;
+		min-width: 0;
 		align-self: stretch;
-		justify-self: center;
 		padding: clamp(14px, 1.4vw, 22px);
 		border: 1px solid rgba(148, 183, 220, 0.24);
 		border-radius: 5px;
@@ -105,6 +103,7 @@ const notes = [
 	}
 
 	.note-body {
+		max-width: 62ch;
 		margin: 0;
 		color: #c6d3e0;
 		font-size: var(--experience-copy-size);
@@ -112,7 +111,6 @@ const notes = [
 	}
 
 	@media (max-width: 1120px) {
-		.field-notes { justify-self: start; }
 		.notes li:last-child { padding-bottom: 0; }
 	}
 </style>

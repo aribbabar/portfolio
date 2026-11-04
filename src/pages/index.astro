@@ -9,9 +9,7 @@ import ExperiencePanel from '../components/ExperiencePanel.astro';
 import HireTerminal from '../components/HireTerminal.astro';
 import PixelIcon from '../components/PixelIcon.astro';
 
-const externalLinkIcon = '/pixelarticons/external-link.svg';
 const heartIcon = '/pixelarticons/heart.svg';
-const linkIcon = '/pixelarticons/link.svg';
 ---
 
 <Layout>
@@ -30,7 +28,7 @@ const linkIcon = '/pixelarticons/link.svg';
 				<div class="socials" aria-label="Social links">
 					<span class="social-link">
 						<a href="https://github.com/aribbabar" target="_blank" rel="noreferrer" aria-label="GitHub">
-							<PixelIcon src={externalLinkIcon} />
+							<img src="/social/github.svg" alt="" width="24" height="24" loading="lazy" />
 						</a>
 						<span class="social-tooltip" aria-hidden="true">&gt; GITHUB_</span>
 					</span>
@@ -41,7 +39,7 @@ const linkIcon = '/pixelarticons/link.svg';
 							rel="noreferrer"
 							aria-label="LinkedIn"
 						>
-							<PixelIcon src={linkIcon} />
+							<img src="/social/linkedin.png" alt="" width="24" height="24" loading="lazy" />
 						</a>
 						<span class="social-tooltip" aria-hidden="true">&gt; LINKEDIN_</span>
 					</span>
@@ -166,21 +164,30 @@ const linkIcon = '/pixelarticons/link.svg';
 	.socials a {
 		display: grid;
 		place-items: center;
-		width: 24px;
+		width: 32px;
 		aspect-ratio: 1;
-		color: var(--muted);
+		border-radius: 4px;
 		text-decoration: none;
 		transition:
-			color 160ms ease,
+			background-color 160ms ease,
 			transform 160ms ease;
 	}
 
 	.social-link:is(:hover, :focus-within) a {
-		color: var(--green);
+		background-color: var(--green-soft);
 		transform: translateY(-1px);
 	}
 
-	.socials a :global(.pixel-icon),
+	.socials a:focus-visible {
+		outline: 1px solid var(--green);
+		outline-offset: 2px;
+	}
+
+	.socials img {
+		display: block;
+		object-fit: contain;
+	}
+
 	.built :global(.pixel-icon) {
 		--pixel-icon-size: 18px;
 	}
@@ -205,6 +212,10 @@ const linkIcon = '/pixelarticons/link.svg';
 		.social-tooltip,
 		.socials a {
 			transition: none;
+		}
+
+		.social-link:is(:hover, :focus-within) a {
+			transform: none;
 		}
 	}
 
