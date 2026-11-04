@@ -17,7 +17,7 @@ const links = [
 	<nav aria-label="Primary navigation">
 		{
 			links.map((link, index) => (
-				<a href={link.href} class={index === 0 ? 'active' : undefined} aria-current={index === 0 ? 'location' : undefined}>
+				<a href={link.href} aria-current={index === 0 ? 'location' : undefined}>
 					[{String(index + 1).padStart(2, '0')}] {link.label}
 				</a>
 			))
@@ -47,9 +47,7 @@ const links = [
 		if (!current || current.link.hash === activeHref) return;
 		activeHref = current.link.hash;
 		for (const { link } of entries) {
-			const active = link === current.link;
-			link.classList.toggle('active', active);
-			if (active) link.setAttribute('aria-current', 'location');
+			if (link === current.link) link.setAttribute('aria-current', 'location');
 			else link.removeAttribute('aria-current');
 		}
 	};
@@ -106,8 +104,7 @@ const links = [
 	}
 
 	nav a:hover,
-	nav a:focus-visible,
-	nav a.active {
+	nav a:focus-visible {
 		color: var(--green);
 		text-shadow: 0 0 18px rgba(94, 255, 181, 0.45);
 	}
@@ -132,12 +129,8 @@ const links = [
 		--pixel-icon-size: 24px;
 	}
 
-	.prompt-button:hover,
-	.prompt-button[aria-current='location'] {
-		background: rgba(94, 255, 181, 0.16);
-	}
-
 	.prompt-button:hover {
+		background: rgba(94, 255, 181, 0.16);
 		transform: translateY(-1px);
 	}
 
