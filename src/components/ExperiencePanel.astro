@@ -1,5 +1,7 @@
 ---
 import Panel from './Panel.astro';
+import FieldNotes from './FieldNotes.astro';
+import DashGlow from './DashGlow.astro';
 
 const roles = [
 	{
@@ -47,39 +49,48 @@ const sideQuests = [
 	<p slot="intro" class="intro">
 		Real jobs, real users, and several systems that had opinions.
 	</p>
-	<aside class="side-quests" aria-label="Additional experience">
-		<strong>&gt; Side.Quests</strong>
-		<ul>
-			{
-				sideQuests.map((quest) => (
-					<li>{quest}</li>
-				))
-			}
-		</ul>
-	</aside>
-	<ol class="timeline">
-		{
-			roles.map((role, index) => (
-				<li>
-					<time>{role.period}</time>
-					<span class="node" aria-hidden="true"></span>
-					<article style={`--role-index: ${index}`}>
-						<div class="role-topline">
-							<span class="status">[{role.status}]</span>
-							<span>{role.company}</span>
-						</div>
-						<h3>{role.title}</h3>
-						<p>{role.body}</p>
-						<ul class="role-tags" aria-label={`${role.title} skills`}>
-							{role.tags.map((tag) => (
-								<li class="tech-chip">{tag}</li>
-							))}
-						</ul>
-					</article>
-				</li>
-			))
-		}
-	</ol>
+	<div class="experience-layout">
+		<div class="experience-history">
+			<aside class="side-quests" aria-label="Additional experience">
+				<DashGlow edge="outline" />
+				<strong>&gt; Side.Quests</strong>
+				<ul>
+					{
+						sideQuests.map((quest) => (
+							<li>{quest}</li>
+						))
+					}
+				</ul>
+			</aside>
+			<div class="timeline-track">
+				<ol class="timeline">
+					{
+						roles.map((role, index) => (
+							<li>
+								<time>{role.period}</time>
+								<span class="node" aria-hidden="true"></span>
+								<article style={`--role-index: ${index}`}>
+									<div class="role-topline">
+										<span class="status">[{role.status}]</span>
+										<span>{role.company}</span>
+									</div>
+									<h3>{role.title}</h3>
+									<p>{role.body}</p>
+									<ul class="role-tags" aria-label={`${role.title} skills`}>
+										{role.tags.map((tag) => (
+												<li class="tech-chip">{tag}</li>
+										))}
+									</ul>
+								</article>
+							</li>
+						))
+					}
+				</ol>
+				<DashGlow edge="track" />
+			</div>
+		</div>
+		<FieldNotes />
+	</div>
 	<ul class="experience-bars" aria-hidden="true">
 		<li style="--bar-height: 76px"></li>
 		<li style="--bar-height: 132px"></li>
@@ -101,10 +112,8 @@ const sideQuests = [
 </Panel>
 
 <script>
-	const timeline = document.querySelector<HTMLOListElement>('.timeline');
 	const cards = [...document.querySelectorAll<HTMLElement>('.timeline article')];
 	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-	const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 	let revealObserver: IntersectionObserver | undefined;
 
 	if (!reducedMotion.matches && 'IntersectionObserver' in window) {
@@ -121,47 +130,11 @@ const sideQuests = [
 		}
 	}
 
-	if (timeline) {
-		const firstNode = timeline.querySelector<HTMLElement>('.node');
-		let glowFrame = 0;
-		let glowActive = false;
-		let pointerX = 0;
-		let pointerY = 0;
-		const resetGlow = () => {
-			cancelAnimationFrame(glowFrame);
-			glowFrame = 0;
-			if (glowActive) timeline.style.setProperty('--glow-opacity', '0');
-			glowActive = false;
-		};
-		timeline.addEventListener('pointermove', (event) => {
-			if (reducedMotion.matches || !finePointer.matches) return;
-			pointerX = event.clientX;
-			pointerY = event.clientY;
-			if (glowFrame) return;
-			glowFrame = requestAnimationFrame(() => {
-				glowFrame = 0;
-				const bounds = timeline.getBoundingClientRect();
-				if (!firstNode) return;
-				const nodeBounds = firstNode.getBoundingClientRect();
-				const distance = Math.abs(pointerX - (nodeBounds.left + nodeBounds.width / 2));
-				if (distance >= 120) {
-					resetGlow();
-					return;
-				}
-				glowActive = true;
-				timeline.style.setProperty('--pointer-y', `${pointerY - bounds.top - 5}px`);
-				timeline.style.setProperty('--glow-opacity', `${Math.max(0, 1 - distance / 120)}`);
-			});
-		});
-		timeline.addEventListener('pointerleave', resetGlow);
-		finePointer.addEventListener('change', resetGlow);
-		reducedMotion.addEventListener('change', () => {
-			resetGlow();
-			if (!reducedMotion.matches) return;
-			revealObserver?.disconnect();
-			for (const card of cards) delete card.dataset.reveal;
-		});
-	}
+	reducedMotion.addEventListener('change', () => {
+		if (!reducedMotion.matches) return;
+		revealObserver?.disconnect();
+		for (const card of cards) delete card.dataset.reveal;
+	});
 </script>
 
 <style>
@@ -169,12 +142,30 @@ const sideQuests = [
 		grid-column: 1 / -1;
 	}
 
-	.side-quests,
-	.timeline {
+	.experience-layout {
 		--date-width: clamp(110px, 12vw, 160px);
 		--node-width: 24px;
 		--timeline-gap: 20px;
 		--role-width: 720px;
+		--experience-label-size: clamp(0.58rem, 0.64vw, 0.72rem);
+		--experience-eyebrow-size: clamp(0.62rem, 0.68vw, 0.76rem);
+		--experience-heading-size: clamp(0.78rem, 0.84vw, 0.95rem);
+		--experience-copy-size: clamp(0.66rem, 0.72vw, 0.82rem);
+		position: relative;
+		z-index: 2;
+		display: grid;
+		grid-template-columns: minmax(0, calc(var(--date-width) + var(--node-width) + var(--timeline-gap) * 2 + var(--role-width))) minmax(280px, 1fr);
+		gap: clamp(24px, 3vw, 52px);
+		align-items: start;
+	}
+
+	.experience-history {
+		min-width: 0;
+	}
+
+	.timeline-track {
+		--dash-track-inset: calc(var(--date-width) + var(--timeline-gap) + var(--node-width) / 2);
+		position: relative;
 	}
 
 	.timeline {
@@ -185,25 +176,6 @@ const sideQuests = [
 		padding: 0;
 		margin: 0;
 		list-style: none;
-	}
-
-	.timeline::before,
-	.timeline::after {
-		position: absolute;
-		top: 5px;
-		bottom: 7px;
-		left: calc(var(--date-width) + var(--timeline-gap) + var(--node-width) / 2);
-		content: "";
-		border-left: 1px dashed rgba(196, 224, 246, 0.42);
-		pointer-events: none;
-	}
-
-	.timeline::after {
-		border-color: var(--green);
-		box-shadow: 0 0 10px rgba(94, 255, 181, 0.4);
-		mask-image: linear-gradient(to bottom, transparent calc(var(--pointer-y, 0px) - 105px), black var(--pointer-y, 0px), transparent calc(var(--pointer-y, 0px) + 105px));
-		opacity: var(--glow-opacity, 0);
-		transition: opacity 180ms ease;
 	}
 
 	.timeline > li {
@@ -258,7 +230,7 @@ const sideQuests = [
 		gap: 8px;
 		margin-bottom: 9px;
 		color: var(--faint);
-		font-size: clamp(0.58rem, 0.64vw, 0.72rem);
+		font-size: var(--experience-label-size);
 		text-transform: uppercase;
 	}
 
@@ -297,7 +269,7 @@ const sideQuests = [
 	h3 {
 		margin: 0 0 8px;
 		color: var(--green);
-		font-size: clamp(0.78rem, 0.84vw, 0.95rem);
+		font-size: var(--experience-heading-size);
 		line-height: 1;
 		text-transform: uppercase;
 	}
@@ -305,7 +277,7 @@ const sideQuests = [
 	p {
 		margin: 0;
 		color: #c6d3e0;
-		font-size: clamp(0.66rem, 0.72vw, 0.82rem);
+		font-size: var(--experience-copy-size);
 		line-height: 1.55;
 	}
 
@@ -346,7 +318,7 @@ const sideQuests = [
 
 	.side-quests strong {
 		color: var(--purple);
-		font-size: clamp(0.62rem, 0.68vw, 0.76rem);
+		font-size: var(--experience-eyebrow-size);
 		text-transform: uppercase;
 	}
 
@@ -409,8 +381,7 @@ const sideQuests = [
 			display: none;
 		}
 
-		.side-quests,
-		.timeline {
+		.experience-layout {
 			--date-width: 78px;
 			--node-width: 18px;
 			--timeline-gap: 12px;
@@ -423,6 +394,10 @@ const sideQuests = [
 		.side-quests ul {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	@media (max-width: 1120px) {
+		.experience-layout { grid-template-columns: minmax(0, 1fr); }
 	}
 
 	:global(.experience-panel[data-motion-paused]) .experience-bars li {
@@ -440,10 +415,6 @@ const sideQuests = [
 		article[data-reveal='pending'] {
 			opacity: 1;
 			transform: none;
-		}
-
-		.timeline::after {
-			display: none;
 		}
 
 		article:hover {

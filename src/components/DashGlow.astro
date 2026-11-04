@@ -1,0 +1,170 @@
+---
+interface Props {
+	edge: 'outline' | 'top' | 'track';
+}
+
+const { edge } = Astro.props;
+---
+
+<span class="dash-glow" data-dash-glow={edge} aria-hidden="true"></span>
+
+<script>
+	const lines = [...document.querySelectorAll<HTMLElement>('[data-dash-glow]')];
+	const visible = new Set<Element>();
+	const active = new Set<HTMLElement>();
+	const canTrack = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+	const range = 120;
+	let pointer: { x: number; y: number } | undefined;
+	let frame = 0;
+
+	function update() {
+		frame = 0;
+		const point = pointer;
+		if (!point) return;
+
+		const nearby = lines.flatMap((line) => {
+			if (!visible.has(line)) return [];
+			const { left, top, width, height } = line.getBoundingClientRect();
+			const x = point.x - left;
+			const y = point.y - top;
+			const dx = Math.max(-x, x - width, 0);
+			const dy = Math.max(-y, y - height, 0);
+			const insideOutline = line.dataset.dashGlow === 'outline' && dx === 0 && dy === 0;
+			const distance = insideOutline ? Math.min(x, width - x, y, height - y) : Math.hypot(dx, dy);
+			return distance < range ? [{ line, x, y, distance }] : [];
+		});
+
+		const nextActive = new Set(nearby.map(({ line }) => line));
+		for (const line of active) {
+			if (nextActive.has(line)) continue;
+			line.removeAttribute('data-dash-active');
+			active.delete(line);
+		}
+		for (const { line, x, y, distance } of nearby) {
+			line.style.setProperty('--dash-x', `${x}px`);
+			line.style.setProperty('--dash-y', `${y}px`);
+			line.style.setProperty('--dash-opacity', String(1 - distance / range));
+			line.setAttribute('data-dash-active', '');
+			active.add(line);
+		}
+	}
+
+	function scheduleUpdate() {
+		if (pointer && !frame) frame = requestAnimationFrame(update);
+	}
+
+	function clearPointer() {
+		pointer = undefined;
+		cancelAnimationFrame(frame);
+		frame = 0;
+		for (const line of active) line.removeAttribute('data-dash-active');
+		active.clear();
+	}
+
+	const observer = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+		for (const { target, isIntersecting } of entries) {
+			if (isIntersecting) visible.add(target);
+			else visible.delete(target);
+			target.toggleAttribute('data-dash-visible', isIntersecting);
+		}
+		scheduleUpdate();
+	}) : undefined;
+
+	lines.forEach((line, index) => {
+		line.style.setProperty('--dash-delay', `${index * 850}ms`);
+		if (observer) observer.observe(line);
+		else visible.add(line);
+	});
+
+	document.addEventListener('pointermove', (event) => {
+		if (!canTrack.matches || event.pointerType === 'touch') return;
+		pointer = { x: event.clientX, y: event.clientY };
+		scheduleUpdate();
+	}, { passive: true });
+	document.documentElement.addEventListener('pointerleave', clearPointer);
+	window.addEventListener('blur', clearPointer);
+	window.addEventListener('scroll', scheduleUpdate, { passive: true });
+	window.addEventListener('resize', scheduleUpdate);
+	canTrack.addEventListener('change', clearPointer);
+</script>
+
+<style>
+	@property --dash-sweep {
+		syntax: '<percentage>';
+		inherits: false;
+		initial-value: -20%;
+	}
+
+	.dash-glow {
+		position: absolute;
+		pointer-events: none;
+		border-radius: inherit;
+	}
+
+	.dash-glow[data-dash-glow='outline'] {
+		inset: -1px;
+	}
+
+	.dash-glow[data-dash-glow='top'] {
+		inset: -1px 0 auto;
+		height: 1px;
+	}
+
+	.dash-glow[data-dash-glow='track'] {
+		--dash-direction: 180deg;
+		inset: 5px auto 7px var(--dash-track-inset);
+		width: 1px;
+		border-left: 1px dashed rgba(196, 224, 246, 0.42);
+	}
+
+	.dash-glow::before,
+	.dash-glow::after {
+		filter: drop-shadow(0 0 4px var(--green-soft));
+		position: absolute;
+		inset: 0;
+		content: '';
+		border: 0 dashed var(--green);
+		border-radius: inherit;
+	}
+
+	[data-dash-glow='outline']::before,
+	[data-dash-glow='outline']::after { border-width: 1px; }
+
+	[data-dash-glow='top']::before,
+	[data-dash-glow='top']::after { border-top-width: 1px; }
+
+	[data-dash-glow='track']::before,
+	[data-dash-glow='track']::after {
+		left: -1px;
+		border-left-width: 1px;
+	}
+
+	.dash-glow::before {
+		mask-image: linear-gradient(var(--dash-direction, 90deg), transparent calc(var(--dash-sweep) - 16%), black var(--dash-sweep), transparent calc(var(--dash-sweep) + 16%));
+		opacity: 0;
+	}
+
+	.dash-glow[data-dash-visible]::before {
+		opacity: 0.34;
+		animation: dash-sweep 12s var(--dash-delay, 0s) linear infinite;
+	}
+
+	.dash-glow::after {
+		mask-image: radial-gradient(circle 120px at var(--dash-x, 0px) var(--dash-y, 0px), black, transparent);
+		opacity: 0;
+		transition: opacity 180ms ease;
+	}
+
+	.dash-glow[data-dash-active]::before { opacity: 0; }
+	.dash-glow[data-dash-active]::after { opacity: var(--dash-opacity); }
+
+	@keyframes dash-sweep {
+		0% { --dash-sweep: -20%; }
+		28%, 100% { --dash-sweep: 120%; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dash-glow::before,
+		.dash-glow::after { display: none; }
+	}
+</style>

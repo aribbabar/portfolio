@@ -1,4 +1,5 @@
 ---
+import DashGlow from './DashGlow.astro';
 import Panel from './Panel.astro';
 import PixelIcon from './PixelIcon.astro';
 import blueJayIcon from '../assets/blue-jay.svg?url';
@@ -67,6 +68,7 @@ const academicBuilds = [
 		</div>
 
 		<aside class="education-console" aria-label="Academic project log">
+			<DashGlow edge="outline" />
 			<div class="console-heading">
 				<span class="console-icon-wrap" style="--pixel-icon-size: 26px; color: var(--cyan);">
 					<PixelIcon src={notebookIcon} />
@@ -230,6 +232,7 @@ const academicBuilds = [
 	}
 
 	.education-console {
+		position: relative;
 		display: grid;
 		align-content: start;
 		gap: 16px;
